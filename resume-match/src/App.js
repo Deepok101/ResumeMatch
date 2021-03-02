@@ -1,6 +1,7 @@
 // import logo from "./logo.svg"
 import "./App.css"
 import { Button, TextField } from "@material-ui/core"
+import Parser from "./components/parser/parser-component"
 
 function App() {
     return (
@@ -36,6 +37,7 @@ function App() {
                     Search Button
                 </Button>
             </div>
+            <Parser></Parser>
         </div>
     )
 }
