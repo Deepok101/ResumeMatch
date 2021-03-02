@@ -1,7 +1,8 @@
 // import logo from "./logo.svg"
 import "./App.css"
-import { Button, TextField } from "@material-ui/core"
+import { TextField } from "@material-ui/core"
 import Parser from "./components/parser/parser-component"
+import Upload from './components/upload/upload-component'
 
 function App() {
     return (
@@ -28,15 +29,7 @@ function App() {
                 <TextField className="textBox" id="location" label="Location" />
                 <TextField className="textBox" id="grader" label="Grade" />
             </form>
-            <div className="searchForm">
-                <label for="fileUpload" class="fileUploadLabel">
-                    Drag and drop to upload your Resume
-                </label>
-                <input type="file" id="fileUpload" />
-                <Button variant="contained" color="primary">
-                    Search Button
-                </Button>
-            </div>
+            <Upload/>
             <Parser></Parser>
         </div>
     )
