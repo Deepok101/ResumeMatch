@@ -2,8 +2,7 @@ from flask import Flask
 from flask import request
 from flask_cors import CORS
 
-import pdfplumber
-
+from pdfminer import high_level
 
 app = Flask(__name__)
 CORS(app)
@@ -19,10 +18,10 @@ def upload():
     if 'file' not in request.files:
         return {"error":'no file submitted'}
     file = request.files['file']
-    print(file)
-    with pdfplumber.open(file) as pdf:
-        print("hello")
-        for page in pdf.pages:
-            print(page.extract_text())
+    txt = high_level.extract_text(file)
+
+    # pass text to grader here
+    print(txt)
+
     return {"success":"file submitted"}
 
