@@ -1,0 +1,23 @@
+.card-border{
+    border: 1px rgba(22, 158, 233, 0.6) solid;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    padding:1rem;
+    transition: box-shadow 0.3s;
+    transition-timing-function: ease-out;
+}
+
+.card-border:hover{
+    cursor: pointer;
+    box-shadow: 3px 6px 4px rgba(22, 158, 233, 0.2);
+    transition: box-shadow 0.3s;
+    transition-timing-function: ease-out;
+}
+
+.description{
+    white-space: pre-wrap;
+}
+
+.job-title{
+    margin-top: 0;
+}
