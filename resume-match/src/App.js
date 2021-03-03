@@ -84,8 +84,9 @@ Deliver functionality now while working on long-term technical goals`
                     <DetailedPosting job={selectedJob} />
                 </div>
             </div>
-
-
+            <div className="sortingBox">
+                <Parser></Parser>
+            </div>
         </div>
     )
 }

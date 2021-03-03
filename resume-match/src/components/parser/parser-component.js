@@ -15,24 +15,12 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
         margin: theme.spacing(2),
         minWidth: 120,
-        float: "left",
     },
     selectEmpty: {
         marginTop: theme.spacing(2),
     },
-    sortingBox: {
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    parserBox: {
-        alignItems: "center",
-        justifyContent: "center",
-        margin: theme.spacing(20),
-        height: 600,
-    },
     salarySlider: {
         width: 200,
-        float: "left",
         marginTop: theme.spacing(3),
     },
 }))
@@ -76,7 +64,7 @@ function Parser() {
     }
 
     return (
-        <div className={classes.parserBox}>
+        <div className="parserBox">
             <div className="sortingBox">
                 <FormControl className={classes.formControl}>
                     <InputLabel id="demo-simple-select-label">Grade</InputLabel>
