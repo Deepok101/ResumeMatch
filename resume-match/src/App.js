@@ -1,12 +1,17 @@
 // import logo from "./logo.svg"
 import "./App.css"
 import React, {useState, useEffect} from "react"
+
 import { TextField } from "@material-ui/core"
-import Parser from "./components/parser/parser-component"
+
 import Upload from './components/upload/upload-component'
 import PostingsSection from './components/postingsSection/postingsSection'
+import DetailedPosting from './components/detailedPosting/detailedPosting-component'
 
 function App() {
+
+    const [jobPostings, setJobPostings] = useState([]);
+    const [selectedJob, setSelectedJob] = useState(null);
 
     useEffect(()=>{
 
@@ -53,8 +58,11 @@ Deliver functionality now while working on long-term technical goals`
             },
         ])
 
-    },[] )
-    const [jobPostings, setJobPostings] = useState([])
+    },[] );
+
+    function onJobSelect (idx) {
+        setSelectedJob(jobPostings[idx]);
+    }
 
     return (
         <div>
@@ -70,9 +78,10 @@ Deliver functionality now while working on long-term technical goals`
             {/* <Parser></Parser> */}
             <div className="main">
                 <div className='display-postings-section'>
-                    <PostingsSection jobs={jobPostings} />
+                    <PostingsSection jobs={jobPostings} onJobSelect={onJobSelect} />
                 </div>
                 <div className='display-job-section'>
+                    <DetailedPosting job={selectedJob} />
                 </div>
             </div>
 
