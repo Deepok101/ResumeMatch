@@ -37,7 +37,9 @@ function App() {
                     Search Button
                 </Button>
             </div>
-            <Parser></Parser>
+            <div className="sortingBox">
+                <Parser></Parser>
+            </div>
         </div>
     )
 }
