@@ -44,22 +44,31 @@ function valuetext(value) {
     return `${value}k`
 }
 
-function Filter(
+function Filter({
     filterGrade,
     filterDistance,
     filterSalary,
     setFilterGrade,
     setFilterDistance,
-    setFilterSalary
-) {
+    setFilterSalary,
+    setDisplayableJobs,
+    displayableJobs,
+    jobPostings,
+    }) {
     const classes = useStyles()
-
-    // const [filterGrade, setFilterGrade] = React.useState("")
-    // const [filterDistance, setFilterDistance] = React.useState("")
-    // const [filterSalary, setFilterSalary] = React.useState(0)
 
     const handleGradeChange = (event) => {
         setFilterGrade(event.target.value)
+        let currentJobs;
+        if (displayableJobs.length > 0){
+            currentJobs = displayableJobs
+        }
+        else{
+            currentJobs = jobPostings
+        }
+        setDisplayableJobs(
+            currentJobs.filter( job => job.grade >= event.target.value )
+        )   
     }
 
     const handleDistanceChange = (event) => {
@@ -68,6 +77,16 @@ function Filter(
 
     const handleSalaryChange = (event, newSalary) => {
         setFilterSalary(newSalary)
+        let currentJobs;
+        if (displayableJobs.length > 0){
+            currentJobs = displayableJobs
+        }
+        else{
+            currentJobs = jobPostings
+        }
+        setDisplayableJobs(
+            currentJobs.filter((job) => job.salary >= newSalary)
+        )
     }
 
     return (
