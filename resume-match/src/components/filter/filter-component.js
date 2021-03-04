@@ -44,14 +44,14 @@ function valuetext(value) {
     return `${value}k`
 }
 
-function Filter(
+function Filter({
     filterGrade,
     filterDistance,
     filterSalary,
     setFilterGrade,
     setFilterDistance,
     setFilterSalary
-) {
+    }) {
     const classes = useStyles()
 
     // const [filterGrade, setFilterGrade] = React.useState("")

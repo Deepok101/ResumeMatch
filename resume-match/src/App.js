@@ -2,8 +2,6 @@
 import "./App.css"
 import React, { useState, useEffect } from "react"
 
-import { TextField } from "@material-ui/core"
-
 import Upload from "./components/upload/upload-component"
 import PostingsSection from "./components/postingsSection/postingsSection"
 import DetailedPosting from "./components/detailedPosting/detailedPosting-component"
@@ -12,6 +10,7 @@ import Filter from "./components/filter/filter-component"
 function App() {
     const [jobPostings, setJobPostings] = useState([])
     const [selectedJob, setSelectedJob] = useState(null)
+
     const [filterGrade, setFilterGrade] = React.useState("")
     const [filterDistance, setFilterDistance] = React.useState("")
     const [filterSalary, setFilterSalary] = React.useState(0)
@@ -72,7 +71,7 @@ Deliver functionality now while working on long-term technical goals`,
     return (
         <div>
             <div className="title">Resume Match</div>
-            <div className="search-section">
+            {/* <div className="search-section">
                 <form className="searchForm" noValidate autoComplete="off">
                     <TextField className="textBox" id="job" label="Job" />
                     <TextField
@@ -81,8 +80,9 @@ Deliver functionality now while working on long-term technical goals`,
                         label="Location"
                     />
                 </form>
-                <Upload />
-            </div>
+                
+            </div> */}
+            <Upload />
             <Filter
                 filterGrade={filterGrade}
                 filterDistance={filterDistance}
