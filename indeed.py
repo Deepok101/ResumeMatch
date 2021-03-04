@@ -11,6 +11,60 @@ import re
 import os
 import pdb
 import time
+import psycopg2
+from configparser import ConfigParser
+import config
+
+def config(filename='database.ini', section='postgresql'):
+    # create a parser
+    parser = ConfigParser()
+    # read config file
+    parser.read(filename)
+
+    # get section, default to postgresql
+    db = {}
+    if parser.has_section(section):
+        params = parser.items(section)
+        for param in params:
+            db[param[0]] = param[1]
+    else:
+        raise Exception('Section {0} not found in the {1} file'.format(section, filename))
+
+    return db
+
+
+
+def connect():
+    """ Connect to the PostgreSQL database server """
+    conn = None
+    try:
+        # read connection parameters
+        params = config()
+
+        # connect to the PostgreSQL server
+        print('Connecting to the PostgreSQL database...')
+        conn = psycopg2.connect(**params)
+		
+        # create a cursor
+        cur = conn.cursor()
+        
+	# execute a statement
+        print('PostgreSQL database version:')
+        cur.execute('SELECT version()')
+
+        # display the PostgreSQL database server version
+        db_version = cur.fetchone()
+        print(db_version)
+       
+	# close the communication with the PostgreSQL
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            print('Database connection closed.')
+
 
 
 # Get Job title from the input
@@ -41,7 +95,7 @@ def get_js_data(q, numberOfPosting):
 
     driver.get("https://www.indeed.com/jobs?q={}&start={}".format(q, numberOfPosting))
 
-    print("https://www.indeed.com/jobs?q={}&start={}".format(q, numberOfPosting))
+    # print("https://www.indeed.com/jobs?q={}&start={}".format(q, numberOfPosting))
 
     time.sleep(1)
     try:
@@ -174,6 +228,56 @@ def search_to_csv(query, numrecords):
     time.sleep(10) #avoid captcha
 
 
+def populate_db(q, numberOfPosting):
+
+
+    chrome_options = Options()
+    chrome_options.add_argument('log-level=3')
+
+    driver = webdriver.Chrome("./chromedriver.exe", options=chrome_options)
+
+    driver.get("https://www.indeed.com/jobs?q={}&start={}".format(q, numberOfPosting))
+    driver.implicitly_wait(5)
+
+    all_jobs = driver.find_element_by_class_name('result')
+
+    
+    data = driver.execute_script("return jobmap")
+    
+    keylist = []
+    for key in data:
+        keylist.append(data[key]["jk"])
+
+    for key in keylist:
+        
+        url = "https://www.indeed.com/viewjob?jk={}".format(key)
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, 'html.parser')
+
+        title = soup.find("div", class_="jobsearch-JobInfoHeader-title-container")
+        company = soup.find("div", class_="jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating")
+        location = company.find_next_sibling()
+        description = soup.find("div", id="jobDescriptionText")
+
+        print(title.string)
+        print(company.string)
+        print(location.string)
+        try:
+            salary = soup.find("span", class_="icl-u-xs-mr--xs").string
+        except:
+            salary = "N/A"
+        print(salary)
+        print(description)
+
+def connect_to_db():
+    conn = psycopg2.connect()
+    return conn
+
+
+connect()
+
+# populate_db( "data+scientist", "0")
+
 # search_to_csv("java dev",16)
 # search_to_csv("javascript", 16)
 # search_to_csv("sql",16)
@@ -182,7 +286,7 @@ def search_to_csv(query, numrecords):
 # search_to_csv("php",16)
 # search_to_csv("cgi",16)
 
-search_to_csv("cloud",50)
+# search_to_csv("cloud",50)
 
 # search_to_csv("data scientist", 16)
 # search_to_csv("angular", 16)
