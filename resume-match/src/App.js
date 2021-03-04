@@ -1,24 +1,28 @@
 // import logo from "./logo.svg"
 import "./App.css"
-import React, {useState, useEffect} from "react"
+import React, { useState, useEffect } from "react"
 
 import { TextField } from "@material-ui/core"
 
-import Upload from './components/upload/upload-component'
-import PostingsSection from './components/postingsSection/postingsSection'
-import DetailedPosting from './components/detailedPosting/detailedPosting-component'
+import Upload from "./components/upload/upload-component"
+import PostingsSection from "./components/postingsSection/postingsSection"
+import DetailedPosting from "./components/detailedPosting/detailedPosting-component"
+import Filter from "./components/filter/filter-component"
 
 function App() {
+    const [jobPostings, setJobPostings] = useState([])
+    const [selectedJob, setSelectedJob] = useState(null)
+    const [filterGrade, setFilterGrade] = React.useState("")
+    const [filterDistance, setFilterDistance] = React.useState("")
+    const [filterSalary, setFilterSalary] = React.useState(0)
 
-    const [jobPostings, setJobPostings] = useState([]);
-    const [selectedJob, setSelectedJob] = useState(null);
-
-    useEffect(()=>{
-
+    useEffect(() => {
         setJobPostings([
             {
-'title': 'Job title',
-'description':`Job Description:
+                title: "Software Dev",
+                company: "Microsoft",
+                grade: 60,
+                description: `Job Description:
 
 Note: By applying to this position your application is automatically submitted to the following locations: Waterloo, ON, Canada; Montreal, QC, Canada
 Minimum qualifications:
@@ -30,12 +34,14 @@ Examples of coding in one of the following programming languages including but n
 
 Remote interview process
 Virtual meetings`,
-'location':'Montreal, Qc',
-'salary': '28$/hr'
+                location: "Montreal, Qc",
+                salary: "28$/hr",
             },
             {
-'title': 'Second Job',
-'description':`
+                title: "Web Dev",
+                company: "Amazon",
+                grade: 70,
+                description: `
 
 This position could be located in Montreal or Toronto depending on candidate's preference.
 
@@ -54,14 +60,13 @@ The traits that will make you successful in our team
 
 Independent, creative, accountable
 Foresee, investigate and fix problems with a logical, systematic, and practical approach
-Deliver functionality now while working on long-term technical goals`
+Deliver functionality now while working on long-term technical goals`,
             },
         ])
+    }, [])
 
-    },[] );
-
-    function onJobSelect (idx) {
-        setSelectedJob(jobPostings[idx]);
+    function onJobSelect(idx) {
+        setSelectedJob(jobPostings[idx])
     }
 
     return (
@@ -70,22 +75,35 @@ Deliver functionality now while working on long-term technical goals`
             <div className="search-section">
                 <form className="searchForm" noValidate autoComplete="off">
                     <TextField className="textBox" id="job" label="Job" />
-                    <TextField className="textBox" id="location" label="Location" />
-                    <TextField className="textBox" id="grader" label="Grade" />
+                    <TextField
+                        className="textBox"
+                        id="location"
+                        label="Location"
+                    />
                 </form>
-                <Upload/>
+                <Upload />
             </div>
-            {/* <Parser></Parser> */}
+            <Filter
+                filterGrade={filterGrade}
+                filterDistance={filterDistance}
+                filterSalary={filterSalary}
+                setFilterGrade={setFilterGrade}
+                setFilterDistance={setFilterDistance}
+                setFilterSalary={setFilterSalary}
+            ></Filter>
             <div className="main">
-                <div className='display-postings-section'>
-                    <PostingsSection jobs={jobPostings} onJobSelect={onJobSelect} />
+                <div className="display-postings-section">
+                    <PostingsSection
+                        jobs={jobPostings}
+                        onJobSelect={onJobSelect}
+                        filterGrade={filterGrade}
+                        filterDistance={filterDistance}
+                        filterSalary={filterSalary}
+                    />
                 </div>
-                <div className='display-job-section'>
+                <div className="display-job-section">
                     <DetailedPosting job={selectedJob} />
                 </div>
-            </div>
-            <div className="sortingBox">
-                <Parser></Parser>
             </div>
         </div>
     )
