@@ -3,7 +3,7 @@ import "./upload-component.css"
 
 import { Button, TextField } from "@material-ui/core"
 
-function Upload() {
+function Upload({ setJobPostings }) {
     const [uploadedFile, setUploadedFile] = useState()
     const [searchQuery, setSearchQuery] = useState({
         'job':'',
@@ -24,8 +24,28 @@ function Upload() {
             body: formData,
         })
 
+        const status = await response.status
         const data = await response.json()
-        console.log("this is data", data)
+
+        if (status === 200){
+            setJobPostings(
+                
+                // response.json()
+                [{
+                    companyname:'',
+                    descrip:'',
+                    jobkey:'',
+                    jobname:'',
+                    basicreq:'',
+                    bonusreq:'',
+                    location:'',
+                    salary:'',
+                    url:'',
+                }]
+                
+                
+                )
+        }
     }
 
     const setFile = (event) => {

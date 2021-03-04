@@ -4,19 +4,34 @@ import "./postingsSection.css"
 import JobCard from "../jobCard/jobCard-component"
 
 const PostingsSection = ({
-    jobs,
     onJobSelect,
-    filterGrade,
-    filterDistance,
-    filterSalary,
+    numJobsPerPage,
+    pageNumber,
+    displayableJobs
 }) => {
-    let job = jobs.map((job, idx) => (
-        <div onClick={() => onJobSelect(idx)}>
-            {job.grade >= filterGrade ? <JobCard job={job} /> : <></>}
+
+    let jobList = displayableJobs.map((job, idx) => (
+        <div key={job.jobkey+idx} onClick={() => onJobSelect(idx)}>
+            <JobCard job={job} />
         </div>
     ))
 
-    return <div>{job}</div>
+    let displayJobList = []
+    let jobsDisplayed = 0;
+    
+    //based on current page number, what index in jobList are we at
+    let startIndex = ( (pageNumber-1) *numJobsPerPage )
+
+    // iterates through job list and gets max number of jobs after start index
+    for (let i = startIndex; i< jobList.length; i++){
+        displayJobList.push(jobList[i])
+        jobsDisplayed +=1
+        if (jobsDisplayed >=numJobsPerPage){
+            break;
+        }
+    }
+
+    return <div>{displayJobList}</div>
 }
 
 export default PostingsSection
