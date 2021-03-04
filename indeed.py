@@ -34,7 +34,7 @@ def config(filename='database.ini', section='postgresql'):
 
 
 
-def connect():
+def insert_to_database_record(key, title, description, salary, location, company, url):
     """ Connect to the PostgreSQL database server """
     conn = None
     try:
@@ -43,18 +43,27 @@ def connect():
 
         # connect to the PostgreSQL server
         print('Connecting to the PostgreSQL database...')
-        conn = psycopg2.connect(**params)
+        conn = psycopg2.connect(**params, sslmode="require")
 		
         # create a cursor
         cur = conn.cursor()
         
 	# execute a statement
-        print('PostgreSQL database version:')
-        cur.execute('SELECT version()')
 
         # display the PostgreSQL database server version
-        db_version = cur.fetchone()
-        print(db_version)
+
+        sql = "INSERT INTO jobs(jobkey, jobname, descrip, salary, location, companyname, url) VALUES(%s, %s, %s, %s, %s, %s, %s);"
+        data = (key, title, description, salary, location, company, url)
+
+
+        cur.execute(sql,data)
+        conn.commit()
+
+
+        
+
+
+
        
 	# close the communication with the PostgreSQL
         cur.close()
@@ -236,47 +245,60 @@ def populate_db(q, numberOfPosting):
 
     driver = webdriver.Chrome("./chromedriver.exe", options=chrome_options)
 
-    driver.get("https://www.indeed.com/jobs?q={}&start={}".format(q, numberOfPosting))
-    driver.implicitly_wait(5)
+    for i in range(1, numberOfPosting, 15):
 
-    all_jobs = driver.find_element_by_class_name('result')
+        driver.get("https://www.indeed.com/jobs?q={}&start={}".format(q, i))
+        driver.implicitly_wait(5)
 
-    
-    data = driver.execute_script("return jobmap")
-    
-    keylist = []
-    for key in data:
-        keylist.append(data[key]["jk"])
+        all_jobs = driver.find_element_by_class_name('result')
 
-    for key in keylist:
         
-        url = "https://www.indeed.com/viewjob?jk={}".format(key)
-        page = requests.get(url)
-        soup = BeautifulSoup(page.content, 'html.parser')
+        data = driver.execute_script("return jobmap")
+        
+        keylist = []
+        for key in data:
+            keylist.append(data[key]["jk"])
 
-        title = soup.find("div", class_="jobsearch-JobInfoHeader-title-container")
-        company = soup.find("div", class_="jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating")
-        location = company.find_next_sibling()
-        description = soup.find("div", id="jobDescriptionText")
-
-        print(title.string)
-        print(company.string)
-        print(location.string)
-        try:
-            salary = soup.find("span", class_="icl-u-xs-mr--xs").string
-        except:
-            salary = "N/A"
-        print(salary)
-        print(description)
-
-def connect_to_db():
-    conn = psycopg2.connect()
-    return conn
+        for key in keylist:
 
 
-connect()
+            try:
+            
+                url = "https://www.indeed.com/viewjob?jk={}".format(key)
+                page = requests.get(url)
+                soup = BeautifulSoup(page.content, 'html.parser')
 
-# populate_db( "data+scientist", "0")
+                title = soup.find("div", class_="jobsearch-JobInfoHeader-title-container")
+                company = soup.find("div", class_="jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating")
+                location = company.find_next_sibling()
+                description = soup.find("div", id="jobDescriptionText")
+
+                # print(title.string)
+                # print(company.string)
+                # print(location.string)
+                try:
+                    salary = soup.find("span", class_="icl-u-xs-mr--xs").string
+                except:
+                    salary = "N/A"
+                # print(salary)
+                # print(description)
+
+                insert_to_database_record(str(key), title.string, str(description), salary, location.string, company.string, url)
+
+            except:
+                print("error, skipping this one")
+
+
+
+
+populate_db( "data+scientist", 200)
+populate_db("java+dev", 200)
+populate_db("sql", 200)
+populate_db("javascript", 200)
+
+
+
+
 
 # search_to_csv("java dev",16)
 # search_to_csv("javascript", 16)
