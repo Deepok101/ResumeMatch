@@ -50,9 +50,6 @@ function Upload() {
                     id="location"
                     label="Location"
                 />
-            </form> 
-
-            <div className="searchForm" >
                 <label htmlFor="fileUpload" className="fileUploadLabel">
                     {uploadedFile ? (
                         <div>Uploaded File: {uploadedFile.name}</div>
@@ -64,6 +61,10 @@ function Upload() {
                 <Button onClick={uploadFile} variant="contained" color="primary">
                     Search Button
                 </Button>
+            </form> 
+
+            <div className="searchForm" >
+                
             </div>
         </div>
     )

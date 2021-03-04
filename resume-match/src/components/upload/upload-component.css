@@ -1,0 +1,13 @@
+*{
+    /* background-color: white; */
+    /* color: black; */
+}
+
+.search-section{ /* drag and drop */
+    background-color: white;
+}
+
+.MuiInputBase-input{
+    border: 20px;
+    padding: 20px;
+}

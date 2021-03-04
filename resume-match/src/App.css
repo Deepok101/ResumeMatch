@@ -22,10 +22,12 @@
 }
 
 .title {
-    margin: 30px;
-    text-align: center;
-    font-size: 30px !important;
-    font-weight: 600;
+    padding: 30px;
+    text-align: left;
+    color: #B5A323;
+    background-color: #151631;
+    font-size: 18px !important;
+    font-weight: 700;
 }
 
 .searchForm {

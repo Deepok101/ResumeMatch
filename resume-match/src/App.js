@@ -74,42 +74,91 @@ Deliver functionality now while working on long-term technical goals`,
 
     return (
         <div>
-            <div className="title">Resume Match</div>
-            {/* <div className="search-section">
-                <form className="searchForm" noValidate autoComplete="off">
-                    <TextField className="textBox" id="job" label="Job" />
-                    <TextField
-                        className="textBox"
-                        id="location"
-                        label="Location"
-                    />
-                </form>
+            <div>
+                <div className="title">Resume Match</div>
+                {/* <div className="search-section">
+                    <form className="searchForm" noValidate autoComplete="off">
+                        <TextField className="textBox" id="job" label="Job" />
+                        <TextField
+                            className="textBox"
+                            id="location"
+                            label="Location"
+                        />
+                    </form>
+                    
+                </div> */}
+                {/* <div className="row">
+                    
+                    </div> */}
+                {/* <div className="flex-container">
+                    <div className="column">
+                    </div>
+                    <div className="white-column"></div> */}
+
+
                 
-            </div> */}
-            <Upload />
-            <Filter
-                filterGrade={filterGrade}
-                filterDistance={filterDistance}
-                filterSalary={filterSalary}
-                setFilterGrade={setFilterGrade}
-                setFilterDistance={setFilterDistance}
-                setFilterSalary={setFilterSalary}
-            ></Filter>
-            <div className="main">
-                <div className="display-postings-section">
-                    <PostingsSection
-                        jobs={jobPostings}
-                        onJobSelect={onJobSelect}
-                        filterGrade={filterGrade}
-                        filterDistance={filterDistance}
-                        filterSalary={filterSalary}
-                    />
+                    <div>
+                        <Upload />
+                        <Filter
+                            filterGrade={filterGrade}
+                            filterDistance={filterDistance}
+                            filterSalary={filterSalary}
+                            setFilterGrade={setFilterGrade}
+                            setFilterDistance={setFilterDistance}
+                            setFilterSalary={setFilterSalary}
+                        ></Filter>
+                    </div>
+                    {/* <div className="white-column"></div>
+
+                    <div className="column">
+                    </div>
+                    
+                </div> */}
+                
+                {/* <div className="row">
+
                 </div>
-                <div className="display-job-section">
-                    <DetailedPosting job={selectedJob} />
-                </div>
+
+
+                <div className="flex-container">
+
+                    <div className="side-column"></div>
+                    <div className="white-column"></div> */}
+
+                    <div className="main">
+                        <div className="display-postings-section">
+                            <PostingsSection
+                                jobs={jobPostings}
+                                onJobSelect={onJobSelect}
+                                filterGrade={filterGrade}
+                                filterDistance={filterDistance}
+                                filterSalary={filterSalary}
+                            />
+                        </div>
+                        <div className="display-job-section">
+                            <DetailedPosting job={selectedJob} />
+                        </div>
+                    </div>
+                    {/* <div className="white-column"></div>
+                    <div className="side-column"></div>
+
+
+                </div> */}
+                {/* <div className="flex-container">
+                    <div className="side-column"></div>
+                    <div className="main">
+                    </div>
+                    <div className="side-column"></div>
+                </div> */}
+                    
+
+                
             </div>
+
+           
+
         </div>
+        
     )
 }
 
