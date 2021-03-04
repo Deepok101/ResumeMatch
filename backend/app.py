@@ -59,8 +59,7 @@ def keywordCategory():
     resJSON = request.json
     a.addResume(resJSON['resume'])
     res = a.analyzeResume()
-    print(res)
-    return json.dumps(res)
+    return res
 
 if __name__ == "__main__":
     app.run()
