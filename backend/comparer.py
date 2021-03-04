@@ -2,8 +2,8 @@ from parser import Parser
 
 class Comparer:
 
-    def __init__(self, minFreq=0):
-        self.parser = Parser()
+    def __init__(self, parser, minFreq=0):
+        self.parser = parser
         self.minFreq = minFreq
         self.resume = None
         self.jobDesc = None

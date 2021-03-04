@@ -3,8 +3,8 @@ from scipy.special import softmax
 
 class ResumeAnalyzer:
 
-    def __init__(self, minFreq=0):
-        self.parser = Parser()
+    def __init__(self, parser, minFreq=0):
+        self.parser = parser
         self.minFreq = minFreq
         self.resume = None
 
@@ -27,7 +27,7 @@ class ResumeAnalyzer:
                     kwds_score[kwd][idx] = 0
 
         for kwd in kwds_score.keys():
-            kwds_score[kwd] = softmax(kwds_score[kwd])
+            kwds_score[kwd] = list(softmax(kwds_score[kwd]))
 
         return kwds_score
 
