@@ -35,7 +35,9 @@ Remote interview process
 Virtual meetings`,
                 location: "Montreal, Qc",
                 salary: "28$/hr",
+                html: `<ul><li>hello</li></ul>`
             },
+    
             {
                 title: "Web Dev",
                 company: "Amazon",
@@ -60,7 +62,9 @@ The traits that will make you successful in our team
 Independent, creative, accountable
 Foresee, investigate and fix problems with a logical, systematic, and practical approach
 Deliver functionality now while working on long-term technical goals`,
+            html: "<h1>hello and goodbye</h1>"
             },
+            
         ])
     }, [])
 

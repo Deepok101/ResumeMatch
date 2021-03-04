@@ -10,6 +10,7 @@ const DetailedPosting = ({ job }) => {
                     <h2>{job.title}</h2>
                     <h3>{job.company}</h3>
                     <div>{job.description}</div>
+                    <div dangerouslySetInnerHTML={{ __html: job.html}}></div>
                 </div>
             ) : (
                 <></>
