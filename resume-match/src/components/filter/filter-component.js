@@ -1,5 +1,5 @@
 import React from "react"
-import "./parser-component.css"
+import "./filter-component.css"
 
 import {
     FormControl,
@@ -44,23 +44,30 @@ function valuetext(value) {
     return `${value}k`
 }
 
-function Parser() {
+function Filter(
+    filterGrade,
+    filterDistance,
+    filterSalary,
+    setFilterGrade,
+    setFilterDistance,
+    setFilterSalary
+) {
     const classes = useStyles()
 
-    const [grade, setGrade] = React.useState("")
-    const [distance, setDistance] = React.useState("")
-    const [salary, setSalary] = React.useState(0)
+    // const [filterGrade, setFilterGrade] = React.useState("")
+    // const [filterDistance, setFilterDistance] = React.useState("")
+    // const [filterSalary, setFilterSalary] = React.useState(0)
 
     const handleGradeChange = (event) => {
-        setGrade(event.target.value)
+        setFilterGrade(event.target.value)
     }
 
     const handleDistanceChange = (event) => {
-        setDistance(event.target.value)
+        setFilterDistance(event.target.value)
     }
 
     const handleSalaryChange = (event, newSalary) => {
-        setSalary(newSalary)
+        setFilterSalary(newSalary)
     }
 
     return (
@@ -71,7 +78,7 @@ function Parser() {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={grade}
+                        value={filterGrade}
                         onChange={handleGradeChange}
                     >
                         <MenuItem value={60}>60%+</MenuItem>
@@ -87,7 +94,7 @@ function Parser() {
                     <Select
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
-                        value={distance}
+                        value={filterDistance}
                         onChange={handleDistanceChange}
                     >
                         <MenuItem value={5}>within 5 km</MenuItem>
@@ -106,7 +113,7 @@ function Parser() {
                         step={10}
                         marks={marks}
                         valueLabelDisplay="on"
-                        value={salary}
+                        value={filterSalary}
                         onChange={handleSalaryChange}
                     />
                 </div>
@@ -115,4 +122,4 @@ function Parser() {
     )
 }
 
-export default Parser
+export default Filter
