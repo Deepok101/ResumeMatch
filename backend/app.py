@@ -1,7 +1,8 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
-from parser import Parser
+
+from parserFnc import Parser
 from comparer import Comparer
 from analyzer import ResumeAnalyzer
 from pdfminer import high_level

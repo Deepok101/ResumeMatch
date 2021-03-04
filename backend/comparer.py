@@ -1,4 +1,4 @@
-from parser import Parser
+from parserFnc import Parser
 
 class Comparer:
 
