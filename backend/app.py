@@ -32,7 +32,6 @@ def upload():
     file = request.files['file']
     txt = high_level.extract_text(file)
 
-    resJSON = request.json
     results = {}
     for j in jobs.keys():
         c.addResumeJobDesc(txt, jobs[j])
