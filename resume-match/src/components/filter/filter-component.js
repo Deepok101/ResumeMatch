@@ -13,11 +13,11 @@ import {
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
-        margin: theme.spacing(2),
-        minWidth: 120,
+        margin: theme.spacing(3),
+        minWidth: 160,
     },
     selectEmpty: {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(3),
     },
     salarySlider: {
         width: 200,
@@ -54,21 +54,20 @@ function Filter({
     setDisplayableJobs,
     displayableJobs,
     jobPostings,
-    }) {
+}) {
     const classes = useStyles()
 
     const handleGradeChange = (event) => {
         setFilterGrade(event.target.value)
-        let currentJobs;
-        if (displayableJobs.length > 0){
+        let currentJobs
+        if (displayableJobs.length > 0) {
             currentJobs = displayableJobs
-        }
-        else{
+        } else {
             currentJobs = jobPostings
         }
         setDisplayableJobs(
-            currentJobs.filter( job => job.grade >= event.target.value )
-        )   
+            currentJobs.filter((job) => job.grade >= event.target.value)
+        )
     }
 
     const handleDistanceChange = (event) => {
@@ -77,16 +76,13 @@ function Filter({
 
     const handleSalaryChange = (event, newSalary) => {
         setFilterSalary(newSalary)
-        let currentJobs;
-        if (displayableJobs.length > 0){
+        let currentJobs
+        if (displayableJobs.length > 0) {
             currentJobs = displayableJobs
-        }
-        else{
+        } else {
             currentJobs = jobPostings
         }
-        setDisplayableJobs(
-            currentJobs.filter((job) => job.salary >= newSalary)
-        )
+        setDisplayableJobs(currentJobs.filter((job) => job.salary >= newSalary))
     }
 
     return (

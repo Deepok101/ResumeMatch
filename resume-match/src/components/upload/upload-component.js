@@ -6,12 +6,12 @@ import { Button, TextField } from "@material-ui/core"
 function Upload({ setJobPostings }) {
     const [uploadedFile, setUploadedFile] = useState()
     const [searchQuery, setSearchQuery] = useState({
-        'job':'',
-        'location':''
+        job: "",
+        location: "",
     })
 
-    const updateFormFields = (event, key) =>{
-        setSearchQuery({...searchQuery, [key]: event.target.value})
+    const updateFormFields = (event, key) => {
+        setSearchQuery({ ...searchQuery, [key]: event.target.value })
     }
 
     const uploadFile = async () => {
@@ -27,24 +27,23 @@ function Upload({ setJobPostings }) {
         const status = await response.status
         const data = await response.json()
 
-        if (status === 200){
+        if (status === 200) {
             setJobPostings(
-                
                 // response.json()
-                [{
-                    companyname:'',
-                    descrip:'',
-                    jobkey:'',
-                    jobname:'',
-                    basicreq:'',
-                    bonusreq:'',
-                    location:'',
-                    salary:'',
-                    url:'',
-                }]
-                
-                
-                )
+                [
+                    {
+                        companyname: "",
+                        descrip: "",
+                        jobkey: "",
+                        jobname: "",
+                        basicreq: "",
+                        bonusreq: "",
+                        location: "",
+                        salary: "",
+                        url: "",
+                    },
+                ]
+            )
         }
     }
 
@@ -56,23 +55,23 @@ function Upload({ setJobPostings }) {
     return (
         <div className="search-section">
             <form className="searchForm" noValidate autoComplete="off">
-                <TextField 
-                    onChange={(event) => updateFormFields (event, 'job')}
-                    value={searchQuery['job']} 
-                    className="textBox" 
-                    id="job" 
-                    label="Job" 
+                <TextField
+                    onChange={(event) => updateFormFields(event, "job")}
+                    value={searchQuery["job"]}
+                    className="textBox"
+                    id="job"
+                    label="Job"
                 />
                 <TextField
-                    onChange={(event) => updateFormFields (event, 'location')}
-                    value={searchQuery['location']}
+                    onChange={(event) => updateFormFields(event, "location")}
+                    value={searchQuery["location"]}
                     className="textBox"
                     id="location"
                     label="Location"
                 />
-            </form> 
+            </form>
 
-            <div className="searchForm" >
+            <div className="searchForm">
                 <label htmlFor="fileUpload" className="fileUploadLabel">
                     {uploadedFile ? (
                         <div>Uploaded File: {uploadedFile.name}</div>
@@ -81,8 +80,13 @@ function Upload({ setJobPostings }) {
                     )}
                 </label>
                 <input onChange={setFile} type="file" id="fileUpload" />
-                <Button onClick={uploadFile} variant="contained" color="primary">
-                    Search Button
+                <Button
+                    className="searchButton"
+                    onClick={uploadFile}
+                    variant="contained"
+                    color="primary"
+                >
+                    Search
                 </Button>
             </div>
         </div>
