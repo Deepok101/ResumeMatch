@@ -296,8 +296,8 @@ def populate_db(q, numberOfPosting):
 # populate_db( "data+scientist", 200)
 # populate_db("java+dev", 200)
 # populate_db("sql", 200)
-populate_db("javascript", 200)
-populate_db("unix", 200)
+# populate_db("javascript", 200)
+# populate_db("unix", 200)
 
 
 
