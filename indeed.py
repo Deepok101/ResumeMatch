@@ -4,7 +4,7 @@ import bs4
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-
+import sys, getopt
 from bs4 import Tag, NavigableString
 import math
 import re
@@ -14,6 +14,15 @@ import time
 import psycopg2
 from configparser import ConfigParser
 import config
+import pickle
+
+
+def set_viewport_size(driver, width, height):
+    window_size = driver.execute_script("""
+        return [window.outerWidth - window.innerWidth + arguments[0],
+          window.outerHeight - window.innerHeight + arguments[1]];
+        """, width, height)
+    driver.set_window_size(*window_size)
 
 def config(filename='database.ini', section='postgresql'):
     # create a parser
@@ -242,15 +251,25 @@ def populate_db(q, numberOfPosting):
 
     chrome_options = Options()
     chrome_options.add_argument('log-level=3')
-
+    # chrome_options.add_argument('--headless')
+    # cookies = pickle.load(open("cookies.pkl", "rb"))
+    
     driver = webdriver.Chrome("./chromedriver.exe", options=chrome_options)
+    set_viewport_size(driver, 1980, 1850)
+
+
+    driver.implicitly_wait(1)
+
 
     for i in range(1, numberOfPosting, 15):
 
         driver.get("https://www.indeed.com/jobs?q={}&start={}".format(q, i))
-        driver.implicitly_wait(5)
+        driver.delete_all_cookies()
+        for cookie in cookies:
+            driver.add_cookie(cookie)
+        driver.implicitly_wait(11)
 
-        all_jobs = driver.find_element_by_class_name('result')
+        # all_jobs = driver.find_element_by_class_name('result')
 
         
         data = driver.execute_script("return jobmap")
@@ -264,15 +283,18 @@ def populate_db(q, numberOfPosting):
 
             try:
 
-                time.sleep(1)
+                driver.implicitly_wait(1)
             
                 url = "https://www.indeed.com/viewjob?jk={}".format(key)
-                page = requests.get(url)
+                page = requests.get(url, cookies=cookies)
                 soup = BeautifulSoup(page.content, 'html.parser')
 
                 title = soup.find("div", class_="jobsearch-JobInfoHeader-title-container")
                 company = soup.find("div", class_="jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating")
-                location = company.find_next_sibling()
+                try:
+                    location = company.find_next_sibling()
+                except:
+                    location = ""
                 description = soup.find("div", id="jobDescriptionText")
 
                 # print(title.string)
@@ -288,50 +310,48 @@ def populate_db(q, numberOfPosting):
                 insert_to_database_record(str(key), title.string, str(description), salary, location.string, company.string, url)
 
             except:
-                print("error, skipping this one")
+                print("error, skipping this one, with jobkey {}".format(key))
+
+        
+        driver.close()
+
+if __name__ == "__main__":
+    try:
+        query = sys.argv[1:]
+        for q in query:
+            print("next.....")
+            populate_db(q, 200)
+            
+            time.sleep(2)
+    except:
+        print("error")
+
+
+# first visit home page
+# chrome_options = Options()
+# chrome_options.add_argument('log-level=3')
+# chrome_options.add_argument('--user-data-dir=C:\\Users\Ting\\AppData\\Local\\Google\\Chrome\\User Data')
+# driver = webdriver.Chrome(options=chrome_options)
+# url = "https://www.indeed.com"
+# driver.get(url)
+# driver.implicitly_wait(10)
+
+# pickle.dump(driver.get_cookies(),open("cookies.pkl","wb"))
 
 
 
-
-# populate_db( "data+scientist", 200)
-# populate_db("java+dev", 200)
-# populate_db("sql", 200)
-# populate_db("javascript", 200)
-# populate_db("unix", 200)
-
-
-
-
-
-# search_to_csv("java dev",16)
-# search_to_csv("javascript", 16)
-# search_to_csv("sql",16)
-# search_to_csv("unix",16)
-# search_to_csv("spark",16)
-# search_to_csv("php",16)
-# search_to_csv("cgi",16)
-
-# search_to_csv("cloud",50)
-
-# search_to_csv("data scientist", 16)
-# search_to_csv("angular", 16)
-# search_to_csv("react", 16)
-# search_to_csv("machine learning", 16)
-# search_to_csv("ai", 16)
-# search_to_csv("devops", 16)
-# search_to_csv("frontend", 16)
-# search_to_csv("backend", 16)
-# search_to_csv("database engineer", 16)
-# search_to_csv("it", 16)
-# search_to_csv("software", 16)
-# search_to_csv("developer", 16)
-# search_to_csv( "intern", 16)
-
-
-# get_specific_posting_text("954f3848245a4b0c", True) #ibm 
-# get_specific_posting_text("ca5a8e09e6e7c403") #facebook
-# get_specific_posting_text("e546d67d799dc109") #bell
-# get_specific_posting_text("4b858e92eb87ce1e", True) #ugly
-# get_specific_posting_text("eda7a68c4fcdb62a", True) #good
-# get_postings_body("data scientist")
-# extract_jobs_qualification("data+scientist", "0")
+# data+scientist
+# java+dev
+# sql
+# javascript
+# unix
+# spark
+# php
+# cloud
+# angular
+# react
+# frontend
+# backend
+# database+engineer
+# software
+# devops

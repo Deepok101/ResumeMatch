@@ -39,15 +39,16 @@ def annotate_qualifications():
 
         # display the PostgreSQL database server version
 
-        getRowsSql = "SELECT jobkey FROM jobs;"
+        getRowsSql = "SELECT jobkey FROM jobs where basicreq IS NULL and bonusreq IS NULL;"
 
         cur.execute(getRowsSql)
         allRows = cur.fetchall()
         
+        numUpdates = 0
 
         for row in allRows:
             key = str(row[0])
-            print(key)
+            # print(key)
 
             url = "https://www.indeed.com/viewjob?jk={}".format(key)
             page = requests.get(url)
@@ -106,7 +107,7 @@ def annotate_qualifications():
             numMatches = 0
             qualList = []
             for i in range(len(list_array)):
-                print(i)
+                # print(i)
                 
                 lists = list_array[i]
 
@@ -114,8 +115,8 @@ def annotate_qualifications():
                     
 
                     if len(qualList) > 0:
-
-                        print("here")
+                        numUpdates+=1
+                        # print("here")
 
                         firstQuals = "\n".join(qualList[0])
                         query1 = "update jobs set basicreq = %s where jobkey = %s"
@@ -124,7 +125,8 @@ def annotate_qualifications():
                         cur.execute(query1, data1)
 
                     if len(qualList) == 2:
-                        print("here2")
+                        numUpdates +=1
+                        # print("here2")
                         secondQuals = "\n".join(qualList[1])
                         query2 = "update jobs set bonusreq = %s where jobkey = %s"
                         data2 = (secondQuals, key)
@@ -143,20 +145,22 @@ def annotate_qualifications():
 
                 #model
                 
+                try:
+                    df = pd.Series(lists)
+                    x = vectorizer.transform(df)
 
-                df = pd.Series(lists)
-                x = vectorizer.transform(df)
-
-                y = model.predict(x)[0]
+                    y = model.predict(x)[0]
                 # print(lists)
            
 
-                if(y == "y"):
-                    numMatches += 1
-                    qualList.append(lists)
-
+                    if(y == "y"):
+                        numMatches += 1
+                        qualList.append(lists)
+                except:
+                    print("try failed with key {}".format(key))
+                    continue
             
-        conn.commit()
+        
 
 
         
@@ -170,8 +174,12 @@ def annotate_qualifications():
         print(error)
     finally:
         if conn is not None:
+            conn.commit()
             conn.close()
             print('Database connection closed.')
+
+        if numUpdates is not None:
+            print(numUpdates)
 
 
 annotate_qualifications()
