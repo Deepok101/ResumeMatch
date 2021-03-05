@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
+from werkzeug.utils import secure_filename
 from parserFnc import Parser
 from comparer import Comparer
 from analyzer import ResumeAnalyzer
@@ -15,35 +16,41 @@ import signal
 
 load_dotenv()
 p = Parser()
-c = Comparer(p, 30000)
+c = Comparer(p, 20000)
 a = ResumeAnalyzer(p)
 app = Flask(__name__)
 CORS(app)
+UPLOAD_FOLDER = os.path.join('.','static','pdfs')
+ALLOWED_EXTENSIONS = { 'pdf'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@app.route('/', methods=['GET'])
-def hello_world():
-    return "hey"
-
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/api/upload', methods=['POST'])
 def upload():
-    print(request.files)
-    if 'file' not in request.files:
-        return {"error":'no file submitted'}
-    file = request.files.get('file', None)
-    txt = high_level.extract_text(file)
-    
-    print(txt)
+    file = request.files['file']
+    if file.filename == '':
+        return {"error":"no file selected"}
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        save_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(save_location)
+        txt = high_level.extract_text(save_location)
+    else:
+        return {"error":"no work"}
     try:
+        c.addResume(txt)
+
         conn = psycopg2.connect("{}".format(os.getenv("URI"))) 
         cur = conn.cursor()
 
-        cur.execute("Select * FROM jobs LIMIT 0")
+        cur.execute("SELECT * FROM jobs LIMIT 0;")
         colnames = [desc[0] for desc in cur.description]
-
-        cur.execute("SELECT * FROM jobs;")
+        
+        cur.execute("Select * FROM jobs;")
         results = []
-        c.addResume(txt)
 
         for row in cur:
             indRes = {}
