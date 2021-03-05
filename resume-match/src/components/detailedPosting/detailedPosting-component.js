@@ -2,10 +2,9 @@ import { Paper, Button } from "@material-ui/core"
 import React from "react"
 import "./detailedPosting-component.css"
 
-import Grade from '../grade/grade-component'
+import Grade from "../grade/grade-component"
 
 const DetailedPosting = ({ job }) => {
-
     return (
         <Paper elevation={3} className="detailed-container">
             {job ? (
@@ -14,14 +13,26 @@ const DetailedPosting = ({ job }) => {
                         <div className="heading">
                             <div>
                                 <h2>{job.jobname}</h2>
-                                <h3>{job.companyname} &middot; {job.location}</h3>
-                                <h3>{job.salary}</h3>
+                                <h3>
+                                    {job.companyname} &middot; {job.location}
+                                </h3>
+                                <h3 className="salaryHeader">{job.salary}</h3>
                             </div>
                             <Grade grade={job.grade} />
                         </div>
-                        <Button><a href={job.url}>Click here to apply on indeed</a></Button>
+                        <Button
+                            className="applyButton"
+                            variant="contained"
+                            color="primary"
+                            href={job.url}
+                        >
+                            Click here to apply on indeed
+                        </Button>
                     </div>
-                    <div className="description" dangerouslySetInnerHTML={{ __html: job.descrip}}></div>
+                    <div
+                        className="description"
+                        dangerouslySetInnerHTML={{ __html: job.descrip }}
+                    ></div>
                 </div>
             ) : (
                 <></>

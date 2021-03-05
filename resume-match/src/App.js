@@ -9,10 +9,9 @@ import DetailedPosting from "./components/detailedPosting/detailedPosting-compon
 import Filter from "./components/filter/filter-component"
 
 function App() {
-
-    let samplePosting =         {
-        companyname:'Amazon',
-        descrip:`<div class="jobsearch-jobDescriptionText" id="jobDescriptionText"><div>Provides data collection, data management, data analysis and reporting, and decision management tool design and development. Responsible for interfacing with IT to ensure utilization and effective use of IT sponsored tools. Provide basic programming and technical skills to support data management and reporting requirements.
+    let samplePosting = {
+        companyname: "Amazon",
+        descrip: `<div class="jobsearch-jobDescriptionText" id="jobDescriptionText"><div>Provides data collection, data management, data analysis and reporting, and decision management tool design and development. Responsible for interfacing with IT to ensure utilization and effective use of IT sponsored tools. Provide basic programming and technical skills to support data management and reporting requirements.
         <ul><li>Work with designated department to assess, define, and develop report deliverables to meet internal and customer requirements. Design appropriate data repository and reporting tools that will be used to organize, analyze, and report data. Query databases to extract information needed to develop reports. Compile data and other information from multiple data sources.
         </li><li>Support the development of standardized reports.
         </li><li>Interpret, analyze and provide recommendations regarding data accuracy and data collection needs and processes. Work with business unit(s) to identify opportunities to enhance existing and to develop new data information processes and tools. Continuously assess and improve data collection and reporting processes.
@@ -47,18 +46,18 @@ function App() {
         <p></p><p><b>License and Certifications - Required
         </b></p><p></p><p><b>License and Certifications - Preferred
         </b></p><p></p><p>Magellan Health Services is proud to be an Equal Opportunity Employer and a Tobacco-free workplace. EOE/M/F/Vet/Disabled. Every employee must understand, comply and attest to the security responsibilities and security controls unique to their position.</p></div></div>`,
-        jobkey:'amazon',
-        jobname:'Software Developer Engineer',
-        basicreq:`Knowledge of Perl or other scripting languages a plus, Experience with distributed (multi-tiered) systems, algorithms and relational databases,Experience in optimization mathematics (linear programming, nonlinear optimization),Ability to effectively articulate technical challenges and solutions`,
-        bonusreq:'Previous technical internship(s) preferred',
-        location:'Toronto, ON',
-        salary:'28$/hr',
-        url:'indeed.com',
-        grade:'75',
+        jobkey: "amazon",
+        jobname: "Software Developer Engineer",
+        basicreq: `Knowledge of Perl or other scripting languages a plus, Experience with distributed (multi-tiered) systems, algorithms and relational databases,Experience in optimization mathematics (linear programming, nonlinear optimization),Ability to effectively articulate technical challenges and solutions`,
+        bonusreq: "Previous technical internship(s) preferred",
+        location: "Toronto, ON",
+        salary: "28$/hr",
+        url: "indeed.com",
+        grade: "75",
     }
     let samplePostings = []
 
-    for (let i =0; i<14; i++){
+    for (let i = 0; i < 14; i++) {
         samplePostings.push(samplePosting)
     }
 
@@ -70,28 +69,29 @@ function App() {
     const [filterDistance, setFilterDistance] = React.useState("")
     const [filterSalary, setFilterSalary] = React.useState(0)
 
-    const [pageNumber, setPageNumber] = useState(1);
-    
-    const numJobsPerPage = 6;
+    const [pageNumber, setPageNumber] = useState(1)
 
-    useEffect(()=>{
+    const numJobsPerPage = 6
+
+    useEffect(() => {
         // TODO: use filters to update displayable jobs
         setDisplayableJobs(jobPostings)
-
-    },[jobPostings])
+    }, [jobPostings])
 
     function onJobSelect(idx) {
         setSelectedJob(jobPostings[idx])
     }
 
-    function onPageSelect(event, pageNum){
+    function onPageSelect(event, pageNum) {
         setPageNumber(pageNum)
     }
 
     return (
         <div>
-            <div className="title">Resume Match</div>
-            <Upload setJobPostings={setJobPostings}/>
+            <div className="titleBox">
+                <span className="title">Resume Match</span>
+            </div>
+            <Upload setJobPostings={setJobPostings} />
             <Filter
                 filterGrade={filterGrade}
                 filterDistance={filterDistance}
@@ -117,7 +117,11 @@ function App() {
                         <DetailedPosting job={selectedJob} />
                     </div>
                 </div>
-                <Pagination onChange={onPageSelect} count={Math.ceil(displayableJobs.length/numJobsPerPage)} shape="rounded" />
+                <Pagination
+                    onChange={onPageSelect}
+                    count={Math.ceil(displayableJobs.length / numJobsPerPage)}
+                    shape="rounded"
+                />
             </div>
         </div>
     )
