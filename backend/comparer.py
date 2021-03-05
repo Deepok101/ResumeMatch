@@ -25,6 +25,8 @@ class Comparer:
         self.resumeKeywordsFreq = self.parser.findKeywords(self.resume, self.minFreq)
         
         total = len(self.jobKeywordsFreq.keys())
+        if total == 0:
+            return 0
         matches = 0
         for kwd in self.resumeKeywordsFreq.keys():
             if kwd in self.jobKeywordsFreq:
