@@ -3,7 +3,7 @@ import "./upload-component.css"
 
 import { Button, TextField } from "@material-ui/core"
 
-function Upload() {
+function Upload({setShowFilter}) {
     const [uploadedFile, setUploadedFile] = useState()
     const [searchQuery, setSearchQuery] = useState({
         'job':'',
@@ -13,6 +13,11 @@ function Upload() {
     const updateFormFields = (event, key) =>{
         setSearchQuery({...searchQuery, [key]: event.target.value})
     }
+
+    const handleSearchClick = (event) => {
+        uploadFile()
+        setShowFilter(true)
+    } 
 
     const uploadFile = async () => {
         const formData = new FormData()
@@ -50,6 +55,9 @@ function Upload() {
                     id="location"
                     label="Location"
                 />
+            </form> 
+
+            <div className="searchForm" >
                 <label htmlFor="fileUpload" className="fileUploadLabel">
                     {uploadedFile ? (
                         <div>Uploaded File: {uploadedFile.name}</div>
@@ -58,13 +66,9 @@ function Upload() {
                     )}
                 </label>
                 <input onChange={setFile} type="file" id="fileUpload" />
-                <Button onClick={uploadFile} variant="contained" color="primary">
+                <Button onClick={handleSearchClick} variant="contained" color="primary">
                     Search Button
                 </Button>
-            </form> 
-
-            <div className="searchForm" >
-                
             </div>
         </div>
     )

@@ -50,7 +50,8 @@ function Filter({
     filterSalary,
     setFilterGrade,
     setFilterDistance,
-    setFilterSalary
+    setFilterSalary,
+    showFilter
     }) {
     const classes = useStyles()
 
@@ -70,6 +71,7 @@ function Filter({
         setFilterSalary(newSalary)
     }
 
+    if (showFilter) {
     return (
         <div className="parserBox">
             <div className="sortingBox">
@@ -120,6 +122,8 @@ function Filter({
             </div>
         </div>
     )
+    }
+    return null
 }
 
 export default Filter

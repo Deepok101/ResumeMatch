@@ -15,6 +15,8 @@ function App() {
     const [filterDistance, setFilterDistance] = React.useState("")
     const [filterSalary, setFilterSalary] = React.useState(0)
 
+    const [showFilter, setShowFilter] = React.useState(false);
+
     useEffect(() => {
         setJobPostings([
             {
@@ -98,7 +100,11 @@ Deliver functionality now while working on long-term technical goals`,
 
                 
                     <div>
-                        <Upload />
+                        <Upload 
+                            setShowFilter={setShowFilter}
+                        >
+            
+                        </Upload>
                         <Filter
                             filterGrade={filterGrade}
                             filterDistance={filterDistance}
@@ -106,6 +112,8 @@ Deliver functionality now while working on long-term technical goals`,
                             setFilterGrade={setFilterGrade}
                             setFilterDistance={setFilterDistance}
                             setFilterSalary={setFilterSalary}
+                            showFilter={showFilter}
+
                         ></Filter>
                     </div>
                     {/* <div className="white-column"></div>
