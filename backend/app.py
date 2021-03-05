@@ -1,25 +1,23 @@
 from flask import Flask
 from flask import request
 from flask_cors import CORS
-
 from werkzeug.utils import secure_filename
 from parserFnc import Parser
 from comparer import Comparer
 from analyzer import ResumeAnalyzer
 from pdfminer import high_level
-
+from dotenv import load_dotenv
 import json
+import psycopg2
 import os
+import sys
+import signal
 
+
+load_dotenv()
 p = Parser()
-c = Comparer(p)
+c = Comparer(p, 20000)
 a = ResumeAnalyzer(p)
-
-jobs = {
-    "job1": "This job requires exquisite employees with React, Nodejs, angular and epic unity skills!",
-    "job2": "U have to be a hot girl and have some mysql, db2, kubernetes skills bruv"
-}
-
 app = Flask(__name__)
 CORS(app)
 UPLOAD_FOLDER = os.path.join('.','static','pdfs')
@@ -32,39 +30,76 @@ def allowed_file(filename):
 
 @app.route('/api/upload', methods=['POST'])
 def upload():
-    if 'file' not in request.files:
-        return {"error":'no file submitted'}
     file = request.files['file']
     if file.filename == '':
         return {"error":"no file selected"}
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         save_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-
         file.save(save_location)
+        txt = high_level.extract_text(save_location)
+    else:
+        return {"error":"no work"}
+    try:
+        c.addResume(txt)
 
-    txt = high_level.extract_text(save_location)
+        conn = psycopg2.connect("{}".format(os.getenv("URI"))) 
+        cur = conn.cursor()
 
-    results = {}
-    for j in jobs.keys():
-        c.addResumeJobDesc(txt, jobs[j])
-        results[j] = str(c.compareResumeToJob())
+        cur.execute("SELECT * FROM jobs LIMIT 0;")
+        colnames = [desc[0] for desc in cur.description]
+        
+        cur.execute("Select * FROM jobs;")
+        results = []
 
-    os.remove(save_location)
-
+        for row in cur:
+            indRes = {}
+            for i, colName in enumerate(colnames):
+                indRes[colName] = row[i]
+            c.addJobDesc(row[1])
+            indRes['grade'] = (c.compareResumeToJob())
+            results.append(indRes)
+        conn.close()
+        return {"data": results}
+    except Exception as e:
+        print("Error occured, closing connection.")
+        print(e)
+        conn.close()
+        return "Error occured"
     return results
+    
 
 """
-Format: {"resume": "...", "jobDescription": "..."}
+Format: {"resume": "..."}
 """
 @app.route('/api/testParser', methods=['POST'])
 def testParser():
-    resJSON = request.json
-    results = {}
-    for j in jobs.keys():
-        c.addResumeJobDesc(resJSON['resume'], jobs[j])
-        results[j] = str(c.compareResumeToJob())
-    return results
+    try :
+        conn = psycopg2.connect("{}".format(os.getenv("URI"))) 
+        cur = conn.cursor()
+
+        cur.execute("Select * FROM jobs LIMIT 0")
+        colnames = [desc[0] for desc in cur.description]
+        
+        cur.execute("SELECT * FROM jobs;")
+
+        reqJSON = request.json
+        results = []
+        c.addResume(reqJSON['resume'])
+        for row in cur:
+            indRes = {}
+            for i, colName in enumerate(colnames):
+                indRes[colName] = row[i]
+            c.addJobDesc(row[1])
+            indRes['grade'] = (c.compareResumeToJob())
+            results.append(indRes)
+        conn.close()
+        return {"data": results}
+    except Exception as e:
+        print("Error occured, closing connection.")
+        print(e)
+        conn.close()
+        return "Error occured"
 
 """
 Format: {"resume": "..."}
@@ -75,6 +110,7 @@ def keywordCategory():
     a.addResume(resJSON['resume'])
     res = a.analyzeResume()
     return res
+
 
 if __name__ == "__main__":
     app.run()
