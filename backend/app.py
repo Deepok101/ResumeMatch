@@ -30,7 +30,14 @@ def allowed_file(filename):
 
 @app.route('/api/upload', methods=['POST'])
 def upload():
+
+    if 'file' not in request.files:
+        return { "error": 'no file submitted.' }
+    if 'query' not in request.files:
+        return { "error": "no query found." }
+
     file = request.files['file']
+    query = json.loads(request.files['query'].read().decode('utf-8'))
     if file.filename == '':
         return {"error":"no file selected"}
     if file and allowed_file(file.filename):
@@ -45,6 +52,7 @@ def upload():
 
         conn = psycopg2.connect("{}".format(os.getenv("URI"))) 
         cur = conn.cursor()
+
 
         cur.execute("SELECT * FROM jobs LIMIT 0;")
         colnames = [desc[0] for desc in cur.description]
