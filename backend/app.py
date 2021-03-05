@@ -33,8 +33,11 @@ def allowed_file(filename):
 @app.route('/api/upload', methods=['POST'])
 def upload():
     if 'file' not in request.files:
-        return {"error":'no file submitted'}
+        return { "error": 'no file submitted.' }
+    if 'query' not in request.files:
+        return { "error": "no query found." }
     file = request.files['file']
+    query = json.loads(request.files['query'].read().decode('utf-8'))
     if file.filename == '':
         return {"error":"no file selected"}
     if file and allowed_file(file.filename):
@@ -44,7 +47,9 @@ def upload():
         file.save(save_location)
 
     txt = high_level.extract_text(save_location)
-
+    # USE TXT FOR CV CONTENTS
+    # USE QUERY FOR JOB AND LOCATION QUERY
+    # keys: job, location
     results = {}
     for j in jobs.keys():
         c.addResumeJobDesc(txt, jobs[j])
