@@ -47,8 +47,6 @@ def upload():
             os.makedirs(os.path.join('.','static', 'pdfs'))
     file.save(save_location)
     txt = high_level.extract_text(save_location)
-    else:
-        return {"error":"no work"}
     try:
         c.addResume(txt)
 
@@ -79,6 +77,8 @@ def upload():
         print(e)
         conn.close()
         return "Error occured"
+    else:
+        return {"error":"no work"}
     # print(save_location)
     os.remove(save_location)
     return results
