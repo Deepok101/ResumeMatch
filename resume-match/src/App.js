@@ -119,7 +119,7 @@ function App() {
                 </div>
                 <Pagination
                     onChange={onPageSelect}
-                    count={Math.ceil(displayableJobs.length / numJobsPerPage)}
+                    count={displayableJobs.length > 0 ? Math.ceil(displayableJobs.length / numJobsPerPage) : 1}
                     shape="rounded"
                 />
             </div>
