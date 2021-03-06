@@ -252,8 +252,8 @@ def populate_db(q, numberOfPosting):
     chrome_options = Options()
     chrome_options.add_argument('log-level=3')
     # chrome_options.add_argument('--headless')
-    # cookies = pickle.load(open("cookies.pkl", "rb"))
-    
+    cookies = pickle.load(open("cookies.pkl", "rb"))
+    chrome_options.add_argument('--user-data-dir=C:\\Users\Ting\\AppData\\Local\\Google\\Chrome\\User Data')    
     driver = webdriver.Chrome("./chromedriver.exe", options=chrome_options)
     set_viewport_size(driver, 1980, 1850)
 
@@ -264,9 +264,9 @@ def populate_db(q, numberOfPosting):
     for i in range(1, numberOfPosting, 15):
 
         driver.get("https://www.indeed.com/jobs?q={}&start={}".format(q, i))
-        driver.delete_all_cookies()
-        for cookie in cookies:
-            driver.add_cookie(cookie)
+        # driver.delete_all_cookies()
+        # for cookie in cookies:
+            # driver.add_cookie(cookie)
         driver.implicitly_wait(11)
 
         # all_jobs = driver.find_element_by_class_name('result')
@@ -290,9 +290,10 @@ def populate_db(q, numberOfPosting):
                 soup = BeautifulSoup(page.content, 'html.parser')
 
                 title = soup.find("div", class_="jobsearch-JobInfoHeader-title-container")
+                print(str(title))
                 company = soup.find("div", class_="jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating")
                 try:
-                    location = company.find_next_sibling()
+                    location = company.find_next_sibling().string
                 except:
                     location = ""
                 description = soup.find("div", id="jobDescriptionText")
@@ -304,16 +305,24 @@ def populate_db(q, numberOfPosting):
                     salary = soup.find("span", class_="icl-u-xs-mr--xs").string
                 except:
                     salary = "N/A"
+
+                try:
+                    companyname = company.string
+                except:
+                    companyname = ""
                 # print(salary)
                 # print(description)
+                try:
+                    titlestring = title.string 
+                except:
+                    titlestring = None
 
-                insert_to_database_record(str(key), title.string, str(description), salary, location.string, company.string, url)
+                insert_to_database_record(str(key), titlestring, str(description), salary, location, companyname, url)
 
-            except:
-                print("error, skipping this one, with jobkey {}".format(key))
+            except Exception as j :
+                print("error, skipping this one, with jobkey {} and error msg {}".format(key, j))
 
         
-        driver.close()
 
 if __name__ == "__main__":
     try:
@@ -323,8 +332,8 @@ if __name__ == "__main__":
             populate_db(q, 200)
             
             time.sleep(2)
-    except:
-        print("error")
+    except Exception as e:
+        print(e)
 
 
 # first visit home page

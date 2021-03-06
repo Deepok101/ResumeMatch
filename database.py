@@ -34,6 +34,9 @@ def annotate_qualifications():
 		
         # create a cursor
         cur = conn.cursor()
+
+        model = load('model.joblib')
+        vectorizer = load('vectorizer.joblib')
         
 	# execute a statement
 
@@ -51,7 +54,7 @@ def annotate_qualifications():
             # print(key)
 
             url = "https://www.indeed.com/viewjob?jk={}".format(key)
-            page = requests.get(url)
+            page = requests.get(url, headers=headers)
             soup = BeautifulSoup(page.content, 'html.parser')
 
             result = soup.find_all("div", id="jobDescriptionText")
@@ -66,7 +69,7 @@ def annotate_qualifications():
 
             buildingList = [] #for cases when job listings do a single <ul> per requirement
 
-            for parent in list_items:    
+            for parent in list_items:  
 
                 #either this parent's children is a huge list or this parent's children is a list of exactly one item  
                 children = parent.children
@@ -101,64 +104,105 @@ def annotate_qualifications():
                     if siblings != []:
                         list_array.append(siblings)
 
-            model = load('model.joblib')
-            vectorizer = load('vectorizer.joblib')
+            
         
             numMatches = 0
             qualList = []
-            for i in range(len(list_array)):
-                # print(i)
-                
-                lists = list_array[i]
+            print(list_array)
 
-                if numMatches == 2 or i == len(list_array) - 1 :
+            x_input = []
+            for s in list_array:
+                x_input.append("".join(s))
+            print(x_input)
+            probabilityLists = model.predict_proba(vectorizer.transform(pd.Series(x_input)))
+
+            #get index i,j of best two values probabilityLists[i][2] and probabilityLists[j][2]
+            bestProb = 0
+            bestIndex = 0
+
+            
+
+            for i in range(len(probabilityLists)):
+                if probabilityLists[i][1]>bestProb:
+                    bestProb = probabilityLists[i][1]
+                    bestIndex = i
+
+            secondBest = 0
+            secondBestIndex = 0
+
+            for i in range(len(probabilityLists)):
+                if probabilityLists[i][1] > bestProb and i != bestIndex:
+                    secondBest = probabilityLists[i][1]
+                    secondBestIndex = i
+
+            print("{},{}".format(bestIndex,secondBestIndex))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            # for i in range(len(list_array)):
+            #     # print(i)
+                
+            #     lists = list_array[i]
+
+            #     if numMatches == 2 or i == len(list_array) - 1 :
                     
 
-                    if len(qualList) > 0:
-                        numUpdates+=1
-                        # print("here")
+            #         if len(qualList) > 0:
+            #             numUpdates+=1
+            #             # print("here")
 
-                        firstQuals = "\n".join(qualList[0])
-                        query1 = "update jobs set basicreq = %s where jobkey = %s"
-                        print(firstQuals)
-                        data1 = (firstQuals, key)
-                        cur.execute(query1, data1)
+            #             firstQuals = "\n".join(qualList[0])
+            #             query1 = "update jobs set basicreq = %s where jobkey = %s"
+            #             print(firstQuals)
+            #             data1 = (firstQuals, key)
+            #             cur.execute(query1, data1)
 
-                    if len(qualList) == 2:
-                        numUpdates +=1
-                        # print("here2")
-                        secondQuals = "\n".join(qualList[1])
-                        query2 = "update jobs set bonusreq = %s where jobkey = %s"
-                        data2 = (secondQuals, key)
+            #         if len(qualList) == 2:
+            #             numUpdates +=1
+            #             # print("here2")
+            #             secondQuals = "\n".join(qualList[1])
+            #             query2 = "update jobs set bonusreq = %s where jobkey = %s"
+            #             data2 = (secondQuals, key)
 
-                        print(secondQuals)
-                        cur.execute(query2, data2)
+            #             print(secondQuals)
+            #             cur.execute(query2, data2)
 
-                    numMatches=0
-                    qualList = []
+            #         numMatches=0
+            #         qualList = []
 
-                    break
+            #         break
                     
 
 
 
 
-                #model
+            #     #model
                 
-                try:
-                    df = pd.Series(lists)
-                    x = vectorizer.transform(df)
+            #     try:
+            #         df = pd.Series(lists)
+            #         x = vectorizer.transform(df)
 
-                    y = model.predict(x)[0]
-                # print(lists)
+            #         y = model.predict(x)[0]
+            #     # print(lists)
            
 
-                    if(y == "y"):
-                        numMatches += 1
-                        qualList.append(lists)
-                except:
-                    print("try failed with key {}".format(key))
-                    continue
+            #         if(y == "y"):
+            #             numMatches += 1
+            #             qualList.append(lists)
+            #     except:
+            #         print("try failed with key {}".format(key))
+            #         continue
             
         
 
