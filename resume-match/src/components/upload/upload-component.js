@@ -88,7 +88,7 @@ function Upload({ setJobPostings }) {
         } else {
             setSnackBarState({
                 open: true,
-                message: "Sending and grading CV!",
+                message: "Sending and grading your CV! Our code monkeys are hard at work! Thank you for being patient :)",
                 autoHideDuration: null,
                 severity: "info",
             })
@@ -102,7 +102,7 @@ function Upload({ setJobPostings }) {
             formData.append("query", blob)
 
             const response = await fetch(
-                "https://resume-match.herokuapp.com/api/upload",
+                "http://localhost:5000/api/upload",
                 {
                     method: "POST",
                     body: formData,
@@ -113,7 +113,6 @@ function Upload({ setJobPostings }) {
             const data = await response.json()
 
             if (status === 200) {
-                console.log("ARR")
                 if (data["data"] && data["data"].length > 0) {
                     setSnackBarState({
                         open: true,
