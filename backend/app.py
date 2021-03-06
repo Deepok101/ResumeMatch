@@ -46,7 +46,7 @@ def upload():
     #     if not os.path.exists(os.path.join('.','pdfs')):
     #         os.makedirs(os.path.join('.','pdfs'))
     file.save(file)
-    txt = high_level.extract_text(save_location)
+    txt = high_level.extract_text(file)
     # else:
     #     return {"error":"no work"}
     try:
