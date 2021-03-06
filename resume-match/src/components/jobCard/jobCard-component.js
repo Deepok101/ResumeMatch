@@ -12,7 +12,7 @@ const JobCard = ({ job }) => {
                 <Grade grade={job.grade} />
             </div>
             <div>
-                <h3 className="job-company">{job.company}</h3>
+                <h3 className="job-company">{job.companyname}</h3>
                 <div className="basic-req">{job.basicreq}</div>
                 <div className="bonusreq">{job.bonusreq}</div>
             </div>

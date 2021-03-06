@@ -68,12 +68,16 @@ def upload():
             indRes['grade'] = (c.compareResumeToJob())
             results.append(indRes)
         conn.close()
+        print(save_location)
+        os.remove(save_location)
         return {"data": results}
     except Exception as e:
         print("Error occured, closing connection.")
         print(e)
         conn.close()
         return "Error occured"
+    print(save_location)
+    os.remove(save_location)
     return results
     
 

@@ -35,20 +35,7 @@ function Upload({ setJobPostings }) {
 
         if (status === 200) {
             setJobPostings(
-                // response.json()
-                [
-                    {
-                        companyname: "",
-                        descrip: "",
-                        jobkey: "",
-                        jobname: "",
-                        basicreq: "",
-                        bonusreq: "",
-                        location: "",
-                        salary: "",
-                        url: "",
-                    },
-                ]
+                data['data']
             )
         }
     }
@@ -60,7 +47,7 @@ function Upload({ setJobPostings }) {
 
     return (
         <div className="search-section">
-            <form enctype="multipart/form-data" className="searchForm" noValidate autoComplete="off">
+            <form encType="multipart/form-data" className="searchForm" noValidate autoComplete="off">
                 <TextField
                     onChange={(event) => updateFormFields(event, "job")}
                     value={searchQuery["job"]}
