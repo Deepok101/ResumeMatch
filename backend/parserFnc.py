@@ -46,8 +46,3 @@ class Parser:
                 else: 
                     keywords[tok] = 1
         return keywords
-
-
-
-p = Parser()
-print(p.findKeywords("<html>Hello world reactjs angular</html>"))
