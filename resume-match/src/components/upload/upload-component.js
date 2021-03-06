@@ -1,8 +1,8 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import "./upload-component.css"
 
 import { Button, TextField, Snackbar } from "@material-ui/core"
-import { Alert } from '@material-ui/lab';
+import { Alert } from "@material-ui/lab"
 
 function Upload({ setJobPostings }) {
     const [uploadedFile, setUploadedFile] = useState()
@@ -11,101 +11,133 @@ function Upload({ setJobPostings }) {
         location: "",
     })
     const [snackBarState, setSnackBarState] = useState({
-        open:false,
-        message: '',
-        autoHideDuration:null,
-        severity: 'warning',
+        open: false,
+        message: "",
+        autoHideDuration: null,
+        severity: "warning",
     })
 
-    const {open, message, autoHideDuration, severity} = snackBarState
+    const [jobSpecialChar, setJobSpecialChar] = useState(false)
+    const [locationSpecialChar, setLocationSpecialChar] = useState(false)
 
-    const onClose = () =>{
-        setSnackBarState({...snackBarState, open:false})
+    const { open, message, autoHideDuration, severity } = snackBarState
+
+    const onClose = () => {
+        setSnackBarState({ ...snackBarState, open: false })
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const specialCharacters = new RegExp(/[!@#$%^&*()_+\-=[\]{};':"\\|<>/?]+/)
+
+    useEffect(() => {
+        if (specialCharacters.test(searchQuery.job)) {
+            setJobSpecialChar(true)
+        } else {
+            setJobSpecialChar(false)
+        }
+        if (specialCharacters.test(searchQuery.location)) {
+            setLocationSpecialChar(true)
+        } else {
+            setLocationSpecialChar(false)
+        }
+    }, [searchQuery, specialCharacters])
 
     const updateFormFields = (event, key) => {
         setSearchQuery({ ...searchQuery, [key]: event.target.value })
+
+        console.log("")
     }
 
     const uploadFile = async () => {
         console.log(uploadedFile)
-        if (!uploadedFile){
+        if (!uploadedFile) {
             setSnackBarState({
                 open: true,
-                message: 'Please submit a CV!',
+                message: "Please submit a CV!",
                 autoHideDuration: 2000,
-                severity: 'warning'
+                severity: "warning",
             })
-        }
-        else if (searchQuery.job === "") {
-            setSnackBarState({
-                open:true,
-                message: 'Please input a job!',
-                autoHideDuration: 2000,
-                severity: 'warning'
-            })
-        }
-        else if (searchQuery.location === ""){
-            setSnackBarState({
-                open:true,
-                message: 'Please input a location',
-                autoHideDuration: 2000,
-                severity: 'warning'
-            })
-        }
-        else {
+        } else if (searchQuery.job.replace(/\s+/g, "") === "") {
             setSnackBarState({
                 open: true,
-                message: 'Sending and grading CV!',
+                message: "Please input a job!",
+                autoHideDuration: 2000,
+                severity: "warning",
+            })
+        } else if (searchQuery.location.replace(/\s+/g, "") === "") {
+            setSnackBarState({
+                open: true,
+                message: "Please input a location",
+                autoHideDuration: 2000,
+                severity: "warning",
+            })
+        } else if (specialCharacters.test(searchQuery.job)) {
+            setSnackBarState({
+                open: true,
+                message: "Job contains special characters",
+                autoHideDuration: 2000,
+                severity: "warning",
+            })
+        } else if (specialCharacters.test(searchQuery.location)) {
+            setSnackBarState({
+                open: true,
+                message: "Location contains special characters",
+                autoHideDuration: 2000,
+                severity: "warning",
+            })
+        } else {
+            setSnackBarState({
+                open: true,
+                message: "Sending and grading CV!",
                 autoHideDuration: null,
-                severity: 'info'
+                severity: "info",
             })
             const formData = new FormData()
 
-            const blob = new Blob([JSON.stringify(searchQuery)],{
-                type: 'application/json'
+            const blob = new Blob([JSON.stringify(searchQuery)], {
+                type: "application/json",
             })
 
             formData.append("file", uploadedFile)
             formData.append("query", blob)
 
-            const response = await fetch("http://127.0.0.1:5000/api/upload", {
-                method: "POST",
-                body: formData,
-            })
+            const response = await fetch(
+                "https://resume-match.herokuapp.com/api/upload",
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            )
 
             const status = await response.status
             const data = await response.json()
 
             if (status === 200) {
                 console.log("ARR")
-                if (data['data'] && data['data'].length > 0)
-                {
+                if (data["data"] && data["data"].length > 0) {
                     setSnackBarState({
                         open: true,
-                        message: 'Grading success!',
-                        autoHideDuration: 1000
-                    })
-                    let gradedJobs = data['data'].sort((job1,job2)=>( job2.grade-job1.grade) )
-                    setJobPostings(
-                        gradedJobs
-                    )
-                }
-                else{
-                    setSnackBarState({
-                        open: true,
-                        message: 'Problem grading CV :(',
+                        message: "Grading success!",
                         autoHideDuration: 1000,
-                        severity:'error'
+                    })
+                    let gradedJobs = data["data"].sort(
+                        (job1, job2) => job2.grade - job1.grade
+                    )
+                    setJobPostings(gradedJobs)
+                } else {
+                    setSnackBarState({
+                        open: true,
+                        message: "Problem grading CV :(",
+                        autoHideDuration: 1000,
+                        severity: "error",
                     })
                 }
-            }
-            else{
+            } else {
                 setSnackBarState({
                     open: true,
-                    message: 'Problem grading CV :(',
+                    message: "Problem grading CV :(",
                     autoHideDuration: 1000,
-                    severity: 'error'
+                    severity: "error",
                 })
             }
         }
@@ -117,21 +149,35 @@ function Upload({ setJobPostings }) {
 
     return (
         <div className="search-section">
-            <form encType="multipart/form-data" className="searchForm" noValidate autoComplete="off">
+            <form
+                encType="multipart/form-data"
+                className="searchForm"
+                noValidate
+                autoComplete="off"
+            >
                 <TextField
+                    error={jobSpecialChar}
                     onChange={(event) => updateFormFields(event, "job")}
                     value={searchQuery["job"]}
                     className="textBox"
                     id="job"
                     label="Job"
+                    helperText={
+                        jobSpecialChar ? "Contains special characters" : ""
+                    }
                 />
                 <TextField
+                    error={locationSpecialChar}
                     onChange={(event) => updateFormFields(event, "location")}
                     value={searchQuery["location"]}
                     className="textBox"
                     id="location"
                     label="Location"
+                    helperText={
+                        locationSpecialChar ? "Contains special characters" : ""
+                    }
                 />
+
                 <div className="searchForm">
                     <label htmlFor="fileUpload" className="fileUploadLabel">
                         {uploadedFile ? (
@@ -155,9 +201,9 @@ function Upload({ setJobPostings }) {
                 onClose={onClose}
                 open={open}
                 autoHideDuration={autoHideDuration}
-                anchorOrigin={{vertical:'top', horizontal:'center'}}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
             >
-               <Alert onClose={onClose} severity={severity}>
+                <Alert onClose={onClose} severity={severity}>
                     {message}
                 </Alert>
             </Snackbar>
