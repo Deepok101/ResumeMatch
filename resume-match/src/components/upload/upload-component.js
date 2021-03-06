@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import "./upload-component.css"
 
-import { Button, TextField } from "@material-ui/core"
+import { Button, TextField, Snackbar } from "@material-ui/core"
+import { Alert } from '@material-ui/lab';
 
 function Upload({ setJobPostings }) {
     const [uploadedFile, setUploadedFile] = useState()
@@ -9,58 +10,114 @@ function Upload({ setJobPostings }) {
         job: "",
         location: "",
     })
+    const [snackBarState, setSnackBarState] = useState({
+        open:false,
+        message: '',
+        autoHideDuration:null,
+        severity: 'warning',
+    })
+
+    const {open, message, autoHideDuration, severity} = snackBarState
+
+    const onClose = () =>{
+        setSnackBarState({...snackBarState, open:false})
+    }
 
     const updateFormFields = (event, key) => {
         setSearchQuery({ ...searchQuery, [key]: event.target.value })
     }
 
     const uploadFile = async () => {
-        const formData = new FormData()
+        console.log(uploadedFile)
+        if (!uploadedFile){
+            setSnackBarState({
+                open: true,
+                message: 'Please submit a CV!',
+                autoHideDuration: 2000,
+                severity: 'warning'
+            })
+        }
+        else if (searchQuery.job === "") {
+            setSnackBarState({
+                open:true,
+                message: 'Please input a job!',
+                autoHideDuration: 2000,
+                severity: 'warning'
+            })
+        }
+        else if (searchQuery.location === ""){
+            setSnackBarState({
+                open:true,
+                message: 'Please input a location',
+                autoHideDuration: 2000,
+                severity: 'warning'
+            })
+        }
+        else {
+            setSnackBarState({
+                open: true,
+                message: 'Sending and grading CV!',
+                autoHideDuration: null,
+                severity: 'info'
+            })
+            const formData = new FormData()
 
-        const blob = new Blob([JSON.stringify(searchQuery)],{
-            type: 'application/json'
-        })
+            const blob = new Blob([JSON.stringify(searchQuery)],{
+                type: 'application/json'
+            })
 
-        formData.append("file", uploadedFile)
-        formData.append("query", blob)
+            formData.append("file", uploadedFile)
+            formData.append("query", blob)
 
-        const response = await fetch("http://127.0.0.1:5000/api/upload", {
-            method: "POST",
-            body: formData,
-        })
+            const response = await fetch("http://127.0.0.1:5000/api/upload", {
+                method: "POST",
+                body: formData,
+            })
 
-        const status = await response.status
-        console.log(status)
-        const data = await response.json()
+            const status = await response.status
+            const data = await response.json()
 
-        if (status === 200) {
-            setJobPostings(
-                // response.json()
-                [
-                    {
-                        companyname: "",
-                        descrip: "",
-                        jobkey: "",
-                        jobname: "",
-                        basicreq: "",
-                        bonusreq: "",
-                        location: "",
-                        salary: "",
-                        url: "",
-                    },
-                ]
-            )
+            if (status === 200) {
+                console.log("ARR")
+                if (data['data'] && data['data'].length > 0)
+                {
+                    setSnackBarState({
+                        open: true,
+                        message: 'Grading success!',
+                        autoHideDuration: 1000
+                    })
+                    let gradedJobs = data['data'].sort((job1,job2)=>( job2.grade-job1.grade) )
+                    setJobPostings(
+                        gradedJobs
+                    )
+                }
+                else{
+                    setSnackBarState({
+                        open: true,
+                        message: 'Problem grading CV :(',
+                        autoHideDuration: 1000,
+                        severity:'error'
+                    })
+                }
+            }
+            else{
+                setSnackBarState({
+                    open: true,
+                    message: 'Problem grading CV :(',
+                    autoHideDuration: 1000,
+                    severity: 'error'
+                })
+            }
         }
     }
 
     const setFile = (event) => {
         setUploadedFile(event.target.files[0])
-        console.log(event.target.files[0])
     }
 
     return (
         <div className="search-section">
-            <form enctype="multipart/form-data" className="searchForm" noValidate autoComplete="off">
+            <form encType="multipart/form-data" className="searchForm" noValidate autoComplete="off">
                 <TextField
                     onChange={(event) => updateFormFields(event, "job")}
                     value={searchQuery["job"]}
@@ -94,6 +151,16 @@ function Upload({ setJobPostings }) {
                     </Button>
                 </div>
             </form>
+            <Snackbar
+                onClose={onClose}
+                open={open}
+                autoHideDuration={autoHideDuration}
+                anchorOrigin={{vertical:'top', horizontal:'center'}}
+            >
+               <Alert onClose={onClose} severity={severity}>
+                    {message}
+                </Alert>
+            </Snackbar>
         </div>
     )
 }

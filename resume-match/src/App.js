@@ -53,7 +53,7 @@ function App() {
         location: "Toronto, ON",
         salary: "28$/hr",
         url: "indeed.com",
-        grade: "75",
+        grade: "0.75",
     }
     let samplePostings = []
 
@@ -119,7 +119,7 @@ function App() {
                 </div>
                 <Pagination
                     onChange={onPageSelect}
-                    count={Math.ceil(displayableJobs.length / numJobsPerPage)}
+                    count={displayableJobs.length > 0 ? Math.ceil(displayableJobs.length / numJobsPerPage) : 1}
                     shape="rounded"
                 />
             </div>
