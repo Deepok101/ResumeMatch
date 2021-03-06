@@ -131,6 +131,7 @@ function Filter({
                         valueLabelDisplay="on"
                         value={filterSalary}
                         onChange={handleSalaryChange}
+                        disabled={true}
                     />
                 </div>
             </div>
