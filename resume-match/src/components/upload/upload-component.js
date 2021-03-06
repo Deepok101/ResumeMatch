@@ -15,6 +15,9 @@ function Upload({ setJobPostings }) {
     }
 
     const uploadFile = async () => {
+        if (uploadedFile ==null){
+            
+        }
         const formData = new FormData()
 
         const blob = new Blob([JSON.stringify(searchQuery)],{
@@ -30,7 +33,6 @@ function Upload({ setJobPostings }) {
         })
 
         const status = await response.status
-        console.log(status)
         const data = await response.json()
 
         if (status === 200) {
