@@ -16,7 +16,7 @@ import signal
 
 load_dotenv()
 p = Parser()
-c = Comparer(p, 20000)
+c = Comparer(p, 1000)
 a = ResumeAnalyzer(p)
 app = Flask(__name__)
 CORS(app)
@@ -43,10 +43,10 @@ def upload():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         save_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(save_location)
-        txt = high_level.extract_text(save_location)
-    else:
-        return {"error":"no work"}
+        if not os.path.exists(os.path.join('.','static','pdfs')):
+            os.makedirs(os.path.join('.','static', 'pdfs'))
+    file.save(save_location)
+    txt = high_level.extract_text(save_location)
     try:
         c.addResume(txt)
 
@@ -56,8 +56,10 @@ def upload():
 
         cur.execute("SELECT * FROM jobs LIMIT 0;")
         colnames = [desc[0] for desc in cur.description]
-        
-        cur.execute("Select * FROM jobs;")
+
+        jobQuery = "%{}%".format(query['job'])
+        locName = query['location']
+        cur.execute("SELECT * FROM jobs WHERE descrip LIKE %s;", (jobQuery,))
         results = []
 
         for row in cur:
@@ -68,7 +70,6 @@ def upload():
             indRes['grade'] = (c.compareResumeToJob())
             results.append(indRes)
         conn.close()
-        print(save_location)
         os.remove(save_location)
         return {"data": results}
     except Exception as e:
@@ -76,13 +77,15 @@ def upload():
         print(e)
         conn.close()
         return "Error occured"
-    print(save_location)
+    else:
+        return {"error":"no work"}
+    # print(save_location)
     os.remove(save_location)
     return results
     
 
 """
-Format: {"resume": "..."}
+THIS IS USED FOR TESTING PURPOSES
 """
 @app.route('/api/testParser', methods=['POST'])
 def testParser():

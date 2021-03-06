@@ -91,7 +91,7 @@ function Upload({ setJobPostings }) {
             setLoadingSearch(true)
             setSnackBarState({
                 open: true,
-                message: "Sending and grading CV!",
+                message: "Sending and grading your CV! Our code monkeys are hard at work! Thank you for being patient :)",
                 autoHideDuration: null,
                 severity: "info",
             })
@@ -116,7 +116,6 @@ function Upload({ setJobPostings }) {
             const data = await response.json()
 
             if (status === 200) {
-                console.log("ARR")
                 if (data["data"] && data["data"].length > 0) {
                     setSnackBarState({
                         open: true,

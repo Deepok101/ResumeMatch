@@ -29,10 +29,3 @@ class ResumeAnalyzer:
         for kwd in kwds_score.keys():
             kwds_score[kwd] = list(softmax(kwds_score[kwd]))
         return kwds_score
-
-# r = ResumeAnalyzer()
-# r.addResume("java")
-
-# l = r.analyzeResume()
-# for kwd in l.keys():
-#     print(l[kwd])
