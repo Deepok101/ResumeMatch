@@ -5,6 +5,8 @@
     padding: 1rem;
     transition: box-shadow 0.3s;
     transition-timing-function: ease-out;
+    max-height: 15rem;
+    overflow-y: hidden;
 }
 
 .card-border:hover {
@@ -18,6 +20,10 @@
     white-space: pre-wrap;
 }
 
+.display-list{
+    overflow-x: hidden;
+}
+
 .job-title {
     margin-top: 0;
     margin-bottom: 5px;
@@ -25,5 +31,10 @@
 
 .jobTitleArea {
     display: flex;
+    justify-content: space-between;
+}
+
+.list{
+    display:flex;
     justify-content: space-between;
 }
