@@ -43,6 +43,8 @@ def upload():
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         save_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if not os.path.exists(os.path.join('.','pdfs')):
+            os.makedirs(os.path.join('.','pdfs'))
         file.save(save_location)
         txt = high_level.extract_text(save_location)
     else:
