@@ -45,8 +45,8 @@ def upload():
         save_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         if not os.path.exists(os.path.join('.','static','pdfs')):
             os.makedirs(os.path.join('.','static', 'pdfs'))
-    file.save(file)
-    txt = high_level.extract_text(file)
+    file.save(save_location)
+    txt = high_level.extract_text(save_location)
     else:
         return {"error":"no work"}
     try:
