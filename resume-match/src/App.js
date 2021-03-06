@@ -53,7 +53,7 @@ function App() {
         location: "Toronto, ON",
         salary: "28$/hr",
         url: "indeed.com",
-        grade: "75",
+        grade: "0.75",
     }
     let samplePostings = []
 

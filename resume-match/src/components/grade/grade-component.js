@@ -2,7 +2,7 @@ import React from 'react'
 import './grade-component.css'
 
 const Grade = ({grade}) =>{
-
+    grade = Math.round(grade*100)
     let rating;
     if (grade >= 85){
         rating = "great"
