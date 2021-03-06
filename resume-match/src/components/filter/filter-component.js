@@ -111,6 +111,7 @@ function Filter({
                         id="demo-simple-select"
                         value={filterDistance}
                         onChange={handleDistanceChange}
+                        disabled={true}
                     >
                         <MenuItem value={5}>within 5 km</MenuItem>
                         <MenuItem value={10}>within 10 km</MenuItem>
