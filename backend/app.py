@@ -57,7 +57,7 @@ def upload():
         cur.execute("SELECT * FROM jobs LIMIT 0;")
         colnames = [desc[0] for desc in cur.description]
         
-        cur.execute("Select * FROM jobs;")
+        cur.execute("SELECT * FROM jobs WHERE location=%s AND (jobname LIKE %s OR jobdesc LIKE %s);", (query['location'], query['job'], query['job']))
         results = []
 
         for row in cur:
