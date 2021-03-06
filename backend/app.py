@@ -40,15 +40,15 @@ def upload():
     query = json.loads(request.files['query'].read().decode('utf-8'))
     if file.filename == '':
         return {"error":"no file selected"}
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        save_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        if not os.path.exists(os.path.join('.','pdfs')):
-            os.makedirs(os.path.join('.','pdfs'))
-        file.save(save_location)
-        txt = high_level.extract_text(save_location)
-    else:
-        return {"error":"no work"}
+    # if file and allowed_file(file.filename):
+    #     filename = secure_filename(file.filename)
+    #     save_location = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    #     if not os.path.exists(os.path.join('.','pdfs')):
+    #         os.makedirs(os.path.join('.','pdfs'))
+    file.save(file)
+    txt = high_level.extract_text(save_location)
+    # else:
+    #     return {"error":"no work"}
     try:
         c.addResume(txt)
 
@@ -72,15 +72,15 @@ def upload():
             indRes['grade'] = (c.compareResumeToJob())
             results.append(indRes)
         conn.close()
-        os.remove(save_location)
+        # os.remove(save_location)
         return {"data": results}
     except Exception as e:
         print("Error occured, closing connection.")
         print(e)
         conn.close()
         return "Error occured"
-    print(save_location)
-    os.remove(save_location)
+    # print(save_location)
+    # os.remove(save_location)
     return results
     
 
