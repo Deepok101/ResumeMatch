@@ -3,6 +3,7 @@ import "./upload-component.css"
 
 import { Button, TextField, Snackbar } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
+import ReactLoading from "react-loading"
 
 function Upload({ setJobPostings }) {
     const [uploadedFile, setUploadedFile] = useState()
@@ -19,6 +20,7 @@ function Upload({ setJobPostings }) {
 
     const [jobSpecialChar, setJobSpecialChar] = useState(false)
     const [locationSpecialChar, setLocationSpecialChar] = useState(false)
+    const [loadingSearch, setLoadingSearch] = useState(false)
 
     const { open, message, autoHideDuration, severity } = snackBarState
 
@@ -86,6 +88,7 @@ function Upload({ setJobPostings }) {
                 severity: "warning",
             })
         } else {
+            setLoadingSearch(true)
             setSnackBarState({
                 open: true,
                 message: "Sending and grading CV!",
@@ -124,6 +127,7 @@ function Upload({ setJobPostings }) {
                         (job1, job2) => job2.grade - job1.grade
                     )
                     setJobPostings(gradedJobs)
+                    setLoadingSearch(false)
                 } else {
                     setSnackBarState({
                         open: true,
@@ -131,6 +135,7 @@ function Upload({ setJobPostings }) {
                         autoHideDuration: 1000,
                         severity: "error",
                     })
+                    setLoadingSearch(false)
                 }
             } else {
                 setSnackBarState({
@@ -139,6 +144,7 @@ function Upload({ setJobPostings }) {
                     autoHideDuration: 1000,
                     severity: "error",
                 })
+                setLoadingSearch(false)
             }
         }
     }
@@ -192,9 +198,21 @@ function Upload({ setJobPostings }) {
                         onClick={uploadFile}
                         variant="contained"
                         color="primary"
+                        disabled={loadingSearch}
                     >
                         Search
                     </Button>
+                    {loadingSearch ? (
+                        <ReactLoading
+                            className="loading"
+                            type="spin"
+                            color="#3f51b5"
+                            height={70}
+                            width={70}
+                        />
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </form>
             <Snackbar
