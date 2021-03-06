@@ -1,0 +1,13 @@
+.parserBox {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
+
+.sortingBox {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+}
