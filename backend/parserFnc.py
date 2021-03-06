@@ -25,12 +25,18 @@ class Parser:
                     freq[tag] += 1
         return freq
 
+    def __cleanhtml__(self, raw_html):
+        cleantext = re.sub(r'<[^<]+?>', '', raw_html)
+        return cleantext
+
     def __removeNonAlphanumeric__(self, text):
         text = str(text)
         return re.sub(r'[^A-Za-z0-9 ]+', '', text)
 
     def findKeywords(self, text, minCount=0):
+        text = self.__cleanhtml__(text)
         text = self.__removeNonAlphanumeric__(text)
+
         tokens = [w.lower() for w in word_tokenize(text)]
         keywords = {}
         for tok in tokens:
@@ -40,7 +46,3 @@ class Parser:
                 else: 
                     keywords[tok] = 1
         return keywords
-
-
-
-
