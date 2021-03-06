@@ -102,7 +102,7 @@ function Upload({ setJobPostings }) {
             formData.append("query", blob)
 
             const response = await fetch(
-                "http://localhost:5000/api/upload",
+                "https://resume-match.netlify.app/api/upload",
                 {
                     method: "POST",
                     body: formData,
