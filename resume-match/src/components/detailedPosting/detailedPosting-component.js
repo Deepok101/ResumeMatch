@@ -29,8 +29,9 @@ const DetailedPosting = ({ job }) => {
                                 variant="contained"
                                 color="primary"
                                 href={job.url}
+                                target="_blank"
                             >
-                                Click here to apply on indeed
+                                Click here to apply on linkedin
                             </Button>
                         </div>
                         <div
