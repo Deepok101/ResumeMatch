@@ -68,6 +68,7 @@ function App() {
     const [filterGrade, setFilterGrade] = React.useState("")
     const [filterDistance, setFilterDistance] = React.useState("")
     const [filterSalary, setFilterSalary] = React.useState(0)
+    const [showFilter, setShowFilter] = React.useState(false)
 
     const [pageNumber, setPageNumber] = useState(1)
 
@@ -91,7 +92,9 @@ function App() {
             <div className="titleBox">
                 <span className="title">Resume Match</span>
             </div>
-            <Upload setJobPostings={setJobPostings} />
+            <Upload 
+                setJobPostings={setJobPostings}
+                setShowFilter={setShowFilter} />
             <Filter
                 filterGrade={filterGrade}
                 filterDistance={filterDistance}
@@ -102,6 +105,7 @@ function App() {
                 setDisplayableJobs={setDisplayableJobs}
                 displayableJobs={displayableJobs}
                 jobPostings={jobPostings}
+                showFilter={showFilter}
             ></Filter>
             <div className="main">
                 <div className="display-data">

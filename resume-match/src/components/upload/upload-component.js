@@ -5,7 +5,7 @@ import { Button, TextField, Snackbar } from "@material-ui/core"
 import { Alert } from "@material-ui/lab"
 import ReactLoading from "react-loading"
 
-function Upload({ setJobPostings }) {
+function Upload({ setJobPostings, setShowFilter }) {
     const [uploadedFile, setUploadedFile] = useState()
     const [searchQuery, setSearchQuery] = useState({
         job: "",
@@ -27,6 +27,11 @@ function Upload({ setJobPostings }) {
     const onClose = () => {
         setSnackBarState({ ...snackBarState, open: false })
     }
+
+    const handleSearchClick = (event) => {
+        uploadFile()
+        setShowFilter(true)
+    } 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const specialCharacters = new RegExp(/[!@#$%^&*()_+\-=[\]{};':"\\|<>/?]+/)
@@ -194,7 +199,7 @@ function Upload({ setJobPostings }) {
                     <input onChange={setFile} type="file" id="fileUpload" />
                     <Button
                         className="searchButton"
-                        onClick={uploadFile}
+                        onClick={handleSearchClick}
                         variant="contained"
                         color="primary"
                         disabled={loadingSearch}
