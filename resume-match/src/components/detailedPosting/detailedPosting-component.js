@@ -6,7 +6,7 @@ import Grade from "../grade/grade-component"
 
 const DetailedPosting = ({ job }) => {
     return (
-        <div>
+        <div className="detailed-container">
             {job !== null && job !== undefined ? (
                 <Paper elevation={3} className="detailed-container">
                     <div>
