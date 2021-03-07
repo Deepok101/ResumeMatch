@@ -54,6 +54,7 @@ function Filter({
     setDisplayableJobs,
     displayableJobs,
     jobPostings,
+    showFilter
 }) {
     const classes = useStyles()
 
@@ -85,58 +86,62 @@ function Filter({
         setDisplayableJobs(currentJobs.filter((job) => job.salary >= newSalary))
     }
 
-    return (
-        <div className="parserBox">
-            <div className="sortingBox">
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-label">Grade</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={filterGrade}
-                        onChange={handleGradeChange}
-                    >
-                        <MenuItem value={60}>60%+</MenuItem>
-                        <MenuItem value={70}>70%+</MenuItem>
-                        <MenuItem value={80}>80%+</MenuItem>
-                    </Select>
-                </FormControl>
+    if(showFilter){
 
-                <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-label">
-                        Distance
-                    </InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={filterDistance}
-                        onChange={handleDistanceChange}
-                        disabled={true}
-                    >
-                        <MenuItem value={5}>within 5 km</MenuItem>
-                        <MenuItem value={10}>within 10 km</MenuItem>
-                        <MenuItem value={15}>within 15 km</MenuItem>
-                    </Select>
-                </FormControl>
+        return (
+            <div className="parserBox">
+                <div className="sortingBox">
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-label">Grade</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filterGrade}
+                            onChange={handleGradeChange}
+                        >
+                            <MenuItem value={60}>60%+</MenuItem>
+                            <MenuItem value={70}>70%+</MenuItem>
+                            <MenuItem value={80}>80%+</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                <div className={classes.salarySlider}>
-                    <Typography id="discrete-slider-always" gutterBottom>
-                        Salary
-                    </Typography>
-                    <Slider
-                        getAriaValueText={valuetext}
-                        aria-labelledby="discrete-slider-always"
-                        step={10}
-                        marks={marks}
-                        valueLabelDisplay="on"
-                        value={filterSalary}
-                        onChange={handleSalaryChange}
-                        disabled={true}
-                    />
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="demo-simple-select-label">
+                            Distance
+                        </InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filterDistance}
+                            onChange={handleDistanceChange}
+                            disabled={true}
+                        >
+                            <MenuItem value={5}>within 5 km</MenuItem>
+                            <MenuItem value={10}>within 10 km</MenuItem>
+                            <MenuItem value={15}>within 15 km</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    <div className={classes.salarySlider}>
+                        <Typography id="discrete-slider-always" gutterBottom>
+                            Salary
+                        </Typography>
+                        <Slider
+                            getAriaValueText={valuetext}
+                            aria-labelledby="discrete-slider-always"
+                            step={10}
+                            marks={marks}
+                            valueLabelDisplay="on"
+                            value={filterSalary}
+                            onChange={handleSalaryChange}
+                            disabled={true}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-    )
+        )
+    }
+    return null
 }
 
 export default Filter
