@@ -14,5 +14,5 @@ You will receive a list of best fitting jobs given your query and resume. Each j
 ### Note
 The deployed Resume Match web application currently no longer updates its database of jobs. That feature is currently offline.
 
-## Screenshots
-![image](https://user-images.githubusercontent.com/46658013/132243559-d092cfbc-bdd2-4d17-b185-f7f1e79bd8de.png)
+## Screenshot
+![image](https://user-images.githubusercontent.com/46658013/132243663-6b852f4e-cdff-484f-9c98-0c137aa116f0.png)
